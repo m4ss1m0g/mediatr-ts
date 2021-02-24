@@ -1,13 +1,8 @@
 /* eslint-disable @typescript-eslint/ban-types */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import "reflect-metadata";
-import IRequest from "@/interfaces/irequest";
-import IRequestHandler from "@/interfaces/irequesthandler";
-import Mediator from "@/models/mediator";
+import { Mediator, Handler, IRequestHandler, IResolver, mediatorSettings, IRequest } from "@/index";
 import { injectable, Container, inject } from "inversify";
-import settings from "@/settings";
-import IResolver from "@/interfaces/iresolver";
-import Handler from "@/models/attribute";
 
 describe("Resolver with inversify", () => {
     test("Should resolve own instances", () => {
@@ -77,7 +72,7 @@ describe("Resolver with inversify", () => {
          */
 
         // Settings the resolver with Inversify
-        settings.resolver = new InversifyResolver();
+        mediatorSettings.resolver = new InversifyResolver();
 
         class Request implements IRequest<number> {
             public thenumber: number;
@@ -100,7 +95,7 @@ describe("Resolver with inversify", () => {
         }
 
         const mediator = new Mediator();
-        const result = await mediator.send<number, string>(new Request(99));
+        const result = await mediator.send<string>(new Request(99));
 
         expect(result).toBe("We has 99 ninja fight");
     });

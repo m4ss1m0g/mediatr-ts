@@ -2,7 +2,7 @@ import IRequest from "./irequest";
 import IRequestHandler from "./irequesthandler";
 
 export default interface IResolver {
-    resolve<Input, Output>(name: string): IRequestHandler<IRequest<Input>, Output>;
+    resolve<T>(name: string): IRequestHandler<IRequest<T>, T>;
 
     // eslint-disable-next-line @typescript-eslint/ban-types
     add(name: string, instance: Function): void;

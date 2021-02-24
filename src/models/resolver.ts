@@ -23,7 +23,7 @@ class Instance {
 export default class Resolver implements IResolver {
     private _instances: Instance[] = [];
 
-    public resolve<Input, Output>(name: string): IRequestHandler<IRequest<Input>, Output> {
+    public resolve<T>(name: string): IRequestHandler<IRequest<T>, T> {
         const e = this._instances.find((p) => p.name === name);
         if (!e) throw new Error(`Cannot find element with key: ${name}`);
 

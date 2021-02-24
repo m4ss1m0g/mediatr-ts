@@ -1,5 +1,5 @@
 import Resolver from "@/models/resolver";
-import settings from "@/settings";
+import { mediatorSettings } from "@/index";
 
 /**
  * the anonymous function is required because expect(x).toThrow()
@@ -11,9 +11,8 @@ import settings from "@/settings";
  */
 
 describe("The internal resolver", () => {
-    
     test("The resolver is already instantiated at startup", () => {
-        expect(settings.resolver).not.toBeUndefined();
+        expect(mediatorSettings.resolver).not.toBeUndefined();
     });
 
     test("Should add a new instance to the resolver", () => {
@@ -34,10 +33,9 @@ describe("The internal resolver", () => {
         };
         r.add("k1", fx);
 
-        const f = ()=> r.add("k1", fx);
+        const f = () => r.add("k1", fx);
         expect(f).toThrowError();
     });
-
 
     test("Should get an existing instance", () => {
         const r = new Resolver();

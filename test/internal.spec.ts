@@ -1,13 +1,10 @@
-import Handler from "@/models/attribute";
-import IRequestHandler from "@/interfaces/irequesthandler";
-import Mediator from "@/models/mediator";
-import settings from "@/settings";
+import { Mediator, Handler, IRequestHandler, mediatorSettings } from "@/index";
 import Resolver from "@/models/resolver";
 
 describe("Resolver with local container", () => {
     test("Should resolve existing instance", async () => {
         // Arrange
-        settings.resolver = new Resolver();
+        mediatorSettings.resolver = new Resolver();
 
         class Request {
             name: string;
@@ -34,10 +31,10 @@ describe("Resolver with local container", () => {
 
     test("Should add the instance to the container when adding attribute to a class", () => {
         // Arrange
-        settings.resolver = new Resolver();
+        mediatorSettings.resolver = new Resolver();
 
         // Add the spy
-        const add = jest.spyOn(settings.resolver, "add");
+        const add = jest.spyOn(mediatorSettings.resolver, "add");
 
         class Request {
             name: string;
@@ -56,7 +53,7 @@ describe("Resolver with local container", () => {
 
     test("Should throw duplicate key when adding attribute with same class the resolver", () => {
         // Arrange
-        settings.resolver = new Resolver();
+        mediatorSettings.resolver = new Resolver();
 
         class Request {
             name: string;
@@ -86,7 +83,7 @@ describe("Resolver with local container", () => {
     test("Throw 'cannot find element with key' when instance not found on container", async () => {
         const m = new Mediator();
         const fx = async () => {
-            await m.send<string, string>("foo");
+            await m.send<string>("foo");
         };
 
         await expect(fx()).rejects.toThrowError();

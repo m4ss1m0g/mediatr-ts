@@ -36,7 +36,7 @@ const r = new Request();
 r.name = "Foo";
 
 // Send the command
-const result = await mediator.send<string, string>(r);
+const result = await mediator.send<string>(r);
 
 // result = "Value passed Foo"
 
@@ -119,8 +119,12 @@ class HandlerRequest implements IRequestHandler<Request, string> {
 }
 
 const mediator = new Mediator();
-const result = await mediator.send<number, string>(new Request(99));
+const result = await mediator.send<string>(new Request(99));
 
 // result => "We has 99 ninja fight"
 
 ```
+
+## Notes
+
+Can be plugged with other DI containers, it's enought to implemente the `IResolver` interface and setup it like the `Inversify` provider
