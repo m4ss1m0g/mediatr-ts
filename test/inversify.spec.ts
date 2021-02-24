@@ -1,12 +1,16 @@
-import { Handler, HandlerSettings } from "@/attribute";
-import IRequest from "@/irequest";
-import IRequestHandler from "@/irequesthandler";
-import Mediator from "@/mediator";
-import { injectable, Container } from "inversify";
+/* eslint-disable @typescript-eslint/ban-types */
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import "reflect-metadata";
+import IRequest from "@/interfaces/irequest";
+import IRequestHandler from "@/interfaces/irequesthandler";
+import Mediator from "@/models/mediator";
+import { injectable, Container, inject } from "inversify";
+import settings from "@/settings";
+import IResolver from "@/interfaces/iresolver";
+import Handler from "@/models/attribute";
 
-describe("Inversify", () => {
-    test("Foo", () => {
+describe("Resolver with inversify", () => {
+    test("Should resolve own instances", () => {
         interface IWarrior {
             fight(): string;
         }
@@ -29,7 +33,11 @@ describe("Inversify", () => {
         expect(ninja.fight()).toBe("ninja fight");
     });
 
-    test("Bar", async () => {
+    test("Should resolve the handler and inject inversify interfaces", async () => {
+        /**
+         *  Arrange
+         */
+
         interface IWarrior {
             fight(): string;
         }
@@ -48,11 +56,32 @@ describe("Inversify", () => {
         const c = new Container();
         c.bind<IWarrior>(TYPES.IWarrior).to(Ninja);
 
-        // -------------
-        HandlerSettings.setContainer(c);
+        class InversifyResolver implements IResolver {
+            remove(name: string): void {
+                c.unbind(name);
+            }
+            clear(): void {
+                c.unbindAll();
+            }
+            resolve<Input, Output>(name: string): IRequestHandler<IRequest<Input>, Output> {
+                const fx: IRequestHandler<IRequest<Input>, Output> = c.get(name);
+                return fx;
+            }
+            add(name: string, instance: Function): void {
+                c.bind(name).to(instance as any);
+            }
+        }
+
+        /**
+         *  Act
+         */
+
+        // Settings the resolver with Inversify
+        settings.resolver = new InversifyResolver();
 
         class Request implements IRequest<number> {
             public thenumber: number;
+
             constructor(thenumber: number) {
                 this.thenumber = thenumber;
             }
@@ -62,14 +91,17 @@ describe("Inversify", () => {
         @injectable()
         // eslint-disable-next-line @typescript-eslint/no-unused-vars
         class HandlerRequest implements IRequestHandler<Request, string> {
+            @inject(TYPES.IWarrior)
+            public warrior: IWarrior;
+
             public handle(value: Request): Promise<string> {
-                return Promise.resolve(`Value passed ${value.thenumber}`);
+                return Promise.resolve(`We has ${value.thenumber} ${this.warrior.fight()}`);
             }
         }
 
-        const mediator = new Mediator(c);
-        const result = await mediator.send<number>(new Request(99));
+        const mediator = new Mediator();
+        const result = await mediator.send<number, string>(new Request(99));
 
-        expect(result).toBe("Value passed 99");
+        expect(result).toBe("We has 99 ninja fight");
     });
 });
