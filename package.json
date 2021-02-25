@@ -1,6 +1,6 @@
 {
     "name": "mediatr-ts",
-    "version": "0.1.0",
+    "version": "0.1.1",
     "description": "Mimic the famous MediatR csharp library see: (https://github.com/jbogard/MediatR)",
     "main": "lib/index.js",
     "scripts": {
@@ -17,6 +17,10 @@
     ],
     "author": "m4ss1m0",
     "license": "MIT",
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/m4ss1m0g/mediatr-ts.git"
+    },
     "dependencies": {
         "reflect-metadata": "^0.1.13"
     },

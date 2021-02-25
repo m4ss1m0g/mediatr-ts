@@ -3,10 +3,6 @@
 Porting to typescript of the famous [MediatR](https://github.com/jbogard/MediatR) for C#.
 It work out-of-the-box with an internal resolver, however it can be 'plugged in' with [Inversify](https://inversify.io/).
 
-## Installation
-
-| ToBe Defined
-
 ## Usage
 
 Below usage with the internal provider and with the inversify library
