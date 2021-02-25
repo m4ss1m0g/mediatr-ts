@@ -7,8 +7,7 @@
         "start": "ts-node src/index.ts",
         "test": "jest",
         "build": "rimraf lib && tsc && tsc-alias",
-        "prepare": "npm run build",
-        "prepublishOnly": "npm test"
+        "prepare": "npm run build"
     },
     "keywords": [
         "mediatr",
@@ -34,5 +33,8 @@
         "ts-node": "^9.1.1",
         "tsc-alias": "^1.2.6",
         "typescript": "^4.1.5"
-    }
+    },
+    "files": [
+        "lib/*"
+    ]
 }
