@@ -2,11 +2,13 @@
     "name": "mediatr-ts",
     "version": "0.1.0",
     "description": "Mimic the famous MediatR csharp library see: (https://github.com/jbogard/MediatR)",
-    "main": "src/index.js",
+    "main": "lib/index.js",
     "scripts": {
         "start": "ts-node src/index.ts",
         "test": "jest",
-        "build": "tsc -b"
+        "build": "rimraf lib && tsc && tsc-alias",
+        "prepare": "npm run build",
+        "prepublishOnly": "npm test"
     },
     "keywords": [
         "mediatr",
@@ -17,8 +19,7 @@
     "author": "m4ss1m0",
     "license": "MIT",
     "dependencies": {
-        "reflect-metadata": "^0.1.13",
-        "typescript": "^4.1.5"
+        "reflect-metadata": "^0.1.13"
     },
     "devDependencies": {
         "@types/jest": "^26.0.20",
@@ -28,7 +29,10 @@
         "eslint": "^7.20.0",
         "inversify": "^5.0.5",
         "jest": "^26.6.3",
+        "rimraf": "^3.0.2",
         "ts-jest": "^26.5.1",
-        "ts-node": "^9.1.1"
+        "ts-node": "^9.1.1",
+        "tsc-alias": "^1.2.6",
+        "typescript": "^4.1.5"
     }
 }

@@ -1,6 +1,6 @@
 # MediatR-TS
 
-Porting to typescript of the famouse [MediatR](https://github.com/jbogard/MediatR) for C#.
+Porting to typescript of the famous [MediatR](https://github.com/jbogard/MediatR) for C#.
 It work out-of-the-box with an internal resolver, however it can be 'plugged in' with [Inversify](https://inversify.io/).
 
 ## Installation
@@ -13,8 +13,7 @@ Below usage with the internal provider and with the inversify library
 
 ### Internal resolver
 
-``` typescript
-
+```typescript
 // request.ts -> Define the request
 class Request implements IRequest<string> {
     name: string;
@@ -39,15 +38,13 @@ r.name = "Foo";
 const result = await mediator.send<string>(r);
 
 // result = "Value passed Foo"
-
 ```
 
 ### Inversify resolver
 
 At the very beginning of your app you **MUST** setup the resolver with inversify, or at least **BEFORE** using the `@Handler` attribute and/or the `Mediator` class.
 
-``` typescript
-
+```typescript
 import container from "whatever";
 
 // inversify.resolver.ts -> Implement the resolver
@@ -122,9 +119,8 @@ const mediator = new Mediator();
 const result = await mediator.send<string>(new Request(99));
 
 // result => "We has 99 ninja fight"
-
 ```
 
 ## Notes
 
-Can be plugged with other DI containers, it's enought to implemente the `IResolver` interface and setup it like the `Inversify` provider
+Can be plugged with other DI containers, it's enought to implemente the `IResolver` interface and setup it like the `Inversify` provider.
