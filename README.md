@@ -1,5 +1,10 @@
 # MediatR-TS
 
+![npm type definitions](https://img.shields.io/npm/types/mediatr-ts)
+![npm](https://img.shields.io/npm/v/mediatr-ts)
+![npm bundle size](https://img.shields.io/bundlephobia/min/mediatr-ts)
+![NPM](https://img.shields.io/npm/l/mediatr-ts)
+
 Porting to typescript of the famous [MediatR](https://github.com/jbogard/MediatR) for C#.
 It work out-of-the-box with an internal resolver, however it can be 'plugged in' with [Inversify](https://inversify.io/).
 
