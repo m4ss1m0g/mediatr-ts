@@ -1,5 +1,5 @@
 /**
- * THe Request Handler interface
+ * The Request Handler interface
  *
  * @export
  * @interface IRequestHandler
@@ -9,7 +9,10 @@
 export default interface IRequestHandler<Input, Output> {
     /**
      * Handle the request
-     * @param value The request value
+     *
+     * @param {Input} value The request value
+     * @returns {Promise<Output>}
+     * @memberof IRequestHandler
      */
     handle(value: Input): Promise<Output>;
 }

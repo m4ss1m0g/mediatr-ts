@@ -5,6 +5,11 @@ import { Mediator, Handler, IRequestHandler, IResolver, mediatorSettings, IReque
 import { injectable, Container, inject } from "inversify";
 
 describe("Resolver with inversify", () => {
+    beforeEach(()=>{
+        mediatorSettings.resolver.clear();
+        mediatorSettings.dispatcher.clear();
+    });
+
     test("Should resolve own instances", () => {
         interface IWarrior {
             fight(): string;
@@ -58,8 +63,8 @@ describe("Resolver with inversify", () => {
             clear(): void {
                 c.unbindAll();
             }
-            resolve<Input, Output>(name: string): IRequestHandler<IRequest<Input>, Output> {
-                const fx: IRequestHandler<IRequest<Input>, Output> = c.get(name);
+            resolve<T>(name: string): T {
+                const fx: any = c.get(name);
                 return fx;
             }
             add(name: string, instance: Function): void {

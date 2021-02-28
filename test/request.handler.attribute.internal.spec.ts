@@ -1,7 +1,12 @@
-import { Mediator, Handler, IRequestHandler, mediatorSettings } from "@/index";
+import { Mediator, Handler, IRequestHandler, mediatorSettings, RequestHandler } from "@/index";
 import Resolver from "@/models/resolver";
 
 describe("Resolver with local container", () => {
+    beforeEach(() => {
+        mediatorSettings.resolver.clear();
+        mediatorSettings.dispatcher.clear();
+    });
+
     test("Should resolve existing instance", async () => {
         // Arrange
         mediatorSettings.resolver = new Resolver();
@@ -10,7 +15,7 @@ describe("Resolver with local container", () => {
             name: string;
         }
 
-        @Handler(Request)
+        @RequestHandler(Request)
         // eslint-disable-next-line @typescript-eslint/no-unused-vars
         class HandlerTest implements IRequestHandler<Request, string> {
             handle(value: Request): Promise<string> {
@@ -49,6 +54,7 @@ describe("Resolver with local container", () => {
         }
 
         expect(add).toBeCalled();
+        add.mockRestore();
     });
 
     test("Should throw duplicate key when adding attribute with same class the resolver", () => {
@@ -80,7 +86,7 @@ describe("Resolver with local container", () => {
         expect(fx).toThrowError();
     });
 
-    test("Throw 'cannot find element with key' when instance not found on container", async () => {
+    test("Should throw 'cannot find element with key' when instance not found on container", async () => {
         const m = new Mediator();
         const fx = async () => {
             await m.send<string>("foo");

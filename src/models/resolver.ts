@@ -1,43 +1,29 @@
 /* eslint-disable @typescript-eslint/ban-types */
-import IRequest from "@/interfaces/irequest";
-import IRequestHandler from "@/interfaces/irequesthandler";
 import IResolver from "@/interfaces/iresolver";
+import HandlerInstance from "@/models/handler.instance";
 
-/**
- * The instance object to save the Handler functions and the relative key
- *
- * @class Instance
- */
-class Instance {
-    private _name: string;
-    private _value: Function;
-    constructor(name: string, value: Function) {
-        this._name = name;
-        this._value = value;
-    }
-
-    public get name() {
-        return this._name;
-    }
-
-    public get value() {
-        return this._value;
-    }
-}
 
 /**
  * The internal resolver
  * Here handler functions and relative keys are stored and retrieved.
+ * 
+ * @export
+ * @class Resolver
+ * @implements {IResolver}
  */
 export default class Resolver implements IResolver {
     // Contains the mapping of the functions
-    private _instances: Instance[] = [];
+    private _instances: HandlerInstance[] = [];
 
     /**
      * Retrieve a func from the container
-     * @param name The instance name to retrieve
+     *
+     * @template T
+     * @param {string} name The instance name to retrieve
+     * @returns {T}
+     * @memberof Resolver
      */
-    public resolve<T>(name: string): IRequestHandler<IRequest<T>, T> {
+    public resolve<T>(name: string): T {
         const e = this._instances.find((p) => p.name === name);
         if (!e) throw new Error(`Cannot find element with key: ${name}`);
 
@@ -48,18 +34,22 @@ export default class Resolver implements IResolver {
 
     /**
      * Add a func and name to the container
-     * @param name The instance name to add to the container
-     * @param fx  The function to store with the instance name
+     *
+     * @param {string} name The instance name to add to the container
+     * @param {Function} fx The function to store with the instance name
+     * @memberof Resolver
      */
     public add(name: string, fx: Function): void {
         const k = this._instances.find((p) => p.name === name);
-        if (k === undefined) this._instances.push(new Instance(name, fx));
+        if (k === undefined) this._instances.push(new HandlerInstance(name, fx));
         else throw new Error(`The key ${name} is already been added`);
     }
 
     /**
      * Remove an isntance from the container
-     * @param name The instance name to remove from the container
+     *
+     * @param {string} name The instance name to remove from the container
+     * @memberof Resolver
      */
     public remove(name: string): void {
         const i = this._instances.findIndex((p) => p.name === name);
@@ -69,7 +59,9 @@ export default class Resolver implements IResolver {
     }
 
     /**
-     *  Clear the container
+     * Clear the container
+     *
+     * @memberof Resolver
      */
     public clear(): void {
         this._instances = [];
