@@ -3,14 +3,19 @@
 ![npm type definitions](https://img.shields.io/npm/types/mediatr-ts)
 ![npm](https://img.shields.io/npm/v/mediatr-ts)
 ![npm bundle size](https://img.shields.io/bundlephobia/min/mediatr-ts)
-![NPM](https://img.shields.io/npm/l/mediatr-ts)
+![NPM](https://img.shields.io/npm/l/mediatr-ts)  
+
+![coverage stmt](badges/badge-statements.svg)
+![coverage fx](badges/badge-functions.svg)
+![coverage lines](badges/badge-lines.svg)
+![coverage branches](badges/badge-branches.svg)
 
 Porting to typescript of the famous [MediatR](https://github.com/jbogard/MediatR) for C#.
 It work out-of-the-box with an internal resolver, however it can be 'plugged in' with [Inversify](https://inversify.io/).
 
-## Usage
+## Request Handler
 
-Below usage with the internal provider and with the inversify library
+Below the `RequestHandler` pattern with internal resolver and with the inversify library
 
 ### Internal resolver
 
@@ -21,7 +26,7 @@ class Request implements IRequest<string> {
 }
 
 // handlertest.ts -> Add the attribute to the request handler
-@Handler(Request)
+@RequestHandler(Request)
 class HandlerTest implements IRequestHandler<Request, string> {
     handle(value: Request): Promise<string> {
         return Promise.resolve(`Value passed ${value.name}`);
@@ -43,24 +48,26 @@ const result = await mediator.send<string>(r);
 
 ### Inversify resolver
 
-At the very beginning of your app you **MUST** setup the resolver with inversify, or at least **BEFORE** using the `@Handler` attribute and/or the `Mediator` class.
+At the very beginning of your app you **MUST** setup the resolver with inversify, or at least **BEFORE** using the `@RequestHandler` attribute and/or the `Mediator` class.
 
 ```typescript
 import container from "whatever";
 
 // inversify.resolver.ts -> Implement the resolver
 class InversifyResolver implements IResolver {
-    resolve<Input, Output>(name: string): IRequestHandler<IRequest<Input>, Output> {
-        const fx: IRequestHandler<IRequest<Input>, Output> = container.get(name);
-        return fx;
+    resolve<T>(name: string): <T> {
+        return c.get(name);
     }
+
     add(name: string, instance: Function): void {
         container.bind(name).to(instance as any);
     }
+
     remove(name: string): void {
         // not necessary- can be blank, never called by the lib, for debugging / testing only
         container.unbind(name);
     }
+
     clear(): void {
         // not necessary- can be blank, never called by the lib, for debugging / testing only
         container.unbindAll();
@@ -105,7 +112,7 @@ class Request implements IRequest<number> {
 
 // Decorate the handler request with Handler and injectable attribute, notice the warrior property
 
-@Handler(Request)
+@RequestHandler(Request)
 @injectable()
 class HandlerRequest implements IRequestHandler<Request, string> {
     @inject(TYPES.IWarrior)
@@ -122,6 +129,35 @@ const result = await mediator.send<string>(new Request(99));
 // result => "We has 99 ninja fight"
 ```
 
+## Notification Handler
+
+Below a simple example without Inversify. If you want Inversify to resolve the `NotificationHandler` you should configure the `resolver` property of `mediatorSettings` see the `RequestHandler` example above.
+
+```typescript
+const result: string[] = [];
+
+// The notification class
+class Ping implements INotification {
+    constructor(public value?: string){}
+}
+
+// The notification handler
+@NotificationHandler(Ping, 1)
+class Pong1 implements INotificationHandler<Ping> {
+
+    async handle(notification: Ping): Promise<void> {
+        result.push(notification.value);
+    }
+}
+
+const mediator = new Mediator();
+mediator.publish(new Ping(message));
+
+// result: [ "Foo" ]
+```
+
 ## Notes
 
-Can be plugged with other DI containers, it's enought to implemente the `IResolver` interface and setup it like the `Inversify` provider.
+The `resolver` can be plugged in with other DI containers, it's enought to implemente the `IResolver` interface and setup the `resolver` property of `mediatorSettings` (like the `Inversify` provider).
+
+The `NotificationHandler` can be rewritten implementing the `IDispatcher` and setup the `dispatcher` property of `mediatorSettings`.

@@ -1,10 +1,15 @@
 /* eslint-disable @typescript-eslint/ban-types */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import "reflect-metadata";
-import { Mediator, Handler, IRequestHandler, IResolver, mediatorSettings, IRequest } from "@/index";
+import { Mediator, IRequestHandler, IResolver, mediatorSettings, IRequest, RequestHandler } from "@/index";
 import { injectable, Container, inject } from "inversify";
 
 describe("Resolver with inversify", () => {
+    beforeEach(()=>{
+        mediatorSettings.resolver.clear();
+        mediatorSettings.dispatcher.clear();
+    });
+
     test("Should resolve own instances", () => {
         interface IWarrior {
             fight(): string;
@@ -58,9 +63,8 @@ describe("Resolver with inversify", () => {
             clear(): void {
                 c.unbindAll();
             }
-            resolve<Input, Output>(name: string): IRequestHandler<IRequest<Input>, Output> {
-                const fx: IRequestHandler<IRequest<Input>, Output> = c.get(name);
-                return fx;
+            resolve<T>(name: string): T {
+                return c.get(name);
             }
             add(name: string, instance: Function): void {
                 c.bind(name).to(instance as any);
@@ -82,7 +86,7 @@ describe("Resolver with inversify", () => {
             }
         }
 
-        @Handler(Request)
+        @RequestHandler(Request)
         @injectable()
         // eslint-disable-next-line @typescript-eslint/no-unused-vars
         class HandlerRequest implements IRequestHandler<Request, string> {
