@@ -8,6 +8,7 @@ devDependencies:
   eslint: 7.21.0
   inversify: 5.0.5
   jest: 26.6.3_ts-node@9.1.1
+  jest-coverage-badges: 1.1.2
   rimraf: 3.0.2
   ts-jest: 26.5.2_jest@26.6.3+typescript@4.2.2
   ts-node: 9.1.1_typescript@4.2.2
@@ -2655,6 +2656,16 @@ packages:
         optional: true
     resolution:
       integrity: sha512-t5qdIj/bCj2j7NFVHb2nFB4aUdfucDn3JRKgrZnplb8nieAirAzRSHP8uDEd+qV6ygzg9Pz4YG7UTJf94LPSyg==
+  /jest-coverage-badges/1.1.2:
+    dependencies:
+      mkdirp: 0.5.1
+    dev: true
+    engines:
+      node: '>=6.11'
+      npm: '>=5.3'
+    hasBin: true
+    resolution:
+      integrity: sha512-44A7i2xR6os8+fWk8ZRM6W4fKiD2jwKOLU9eB3iTIIWACd9RbdvmiCNpQZTOsUBhKvz7aQ/ASFhu5JOEhWUOlg==
   /jest-diff/26.6.2:
     dependencies:
       chalk: 4.1.0
@@ -3310,6 +3321,10 @@ packages:
     dev: true
     resolution:
       integrity: sha512-yJHVQEhyqPLUTgt9B83PXu6W3rx4MvvHvSUvToogpwoGDOUQ+yDrR0HRot+yOCdCO7u4hX3pWft6kWBBcqh0UA==
+  /minimist/0.0.8:
+    dev: true
+    resolution:
+      integrity: sha1-hX/Kv8M5fSYluCKCYuhqp6ARsF0=
   /minimist/1.2.5:
     dev: true
     resolution:
@@ -3323,6 +3338,14 @@ packages:
       node: '>=0.10.0'
     resolution:
       integrity: sha512-WRoDn//mXBiJ1H40rqa3vH0toePwSsGb45iInWlTySa+Uu4k3tYUSxa2v1KqAiLtvlrSzaExqS1gtk96A9zvEA==
+  /mkdirp/0.5.1:
+    dependencies:
+      minimist: 0.0.8
+    deprecated: Legacy versions of mkdirp are no longer supported. Please update to mkdirp 1.x. (Note that the API surface has changed to use Promises in 1.x.)
+    dev: true
+    hasBin: true
+    resolution:
+      integrity: sha1-MAV0OOrGz3+MR2fzhkjWaX11yQM=
   /mkdirp/1.0.4:
     dev: true
     engines:
@@ -4778,6 +4801,7 @@ specifiers:
   eslint: ^7.21.0
   inversify: ^5.0.5
   jest: ^26.6.3
+  jest-coverage-badges: ^1.1.2
   reflect-metadata: ^0.1.13
   rimraf: ^3.0.2
   ts-jest: ^26.5.2

@@ -86,4 +86,35 @@ describe("The notification attribute", () => {
         expect(result[0]).toBe(message1 + "_1");
         expect(result[1]).toBe(message1 + "_2");
     });
+
+    test("Should resolve all notification without order field", ()=>{
+        // Arrange
+        const result: string[] = [];
+        const message = "foo";
+
+        @NotificationHandler(Ping)
+        class Pong1 implements INotificationHandler<Ping> {
+
+            async handle(notification: Ping): Promise<void> {
+                result.push(notification.value);
+            }
+        }
+
+        @NotificationHandler(Ping)
+        class Pong2 implements INotificationHandler<Ping> {
+
+            async handle(notification: Ping): Promise<void> {
+                result.push(notification.value);
+            }
+        }
+
+        // Act
+        const mediator = new Mediator();
+        mediator.publish(new Ping(message));
+
+        // Assert
+        expect(result.length).toBe(2);
+        expect(result[0]).toBe(message);
+        expect(result[1]).toBe(message);
+    });
 });
