@@ -14,6 +14,8 @@ import IMediator from "@/interfaces/imediator";
 import Mediator from "@/models/mediator";
 import mediatorSettings from "@/settings";
 
+import DispatchInstance from "@/models/dispatch.instance";
+
 export {
     IRequest,
     IRequestHandler,
@@ -24,6 +26,8 @@ export {
     INotificationHandler,
 
     IDispatcher,
+    DispatchInstance,
+    
     IResolver,
 
     IMediator,

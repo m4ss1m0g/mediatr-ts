@@ -45,5 +45,5 @@ This release support **Notifications**.
 
 [0.2.0]: https://github.com/m4ss1m0g/mediatr-ts/compare/tag/v0.1.2...v0.2.0
 [0.1.2]: https://github.com/m4ss1m0g/mediatr-ts/compare/tag/v0.1.2...v0.1.1
-[0.1.1]: https://github.com/m4ss1m0g/mediatr-ts/releases/tag/v0.1.1
-[0.1.0]: https://www.npmjs.com/package/mediatr-ts/v/0.1.0
+[0.1.1]: https://github.com/m4ss1m0g/mediatr-ts/compare/tag/v0.1.1...v0.1.0
+[0.1.0]: https://github.com/m4ss1m0g/mediatr-ts/releases/tag/v0.1.0
