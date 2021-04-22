@@ -13,6 +13,8 @@
 Porting to typescript of the famous [MediatR](https://github.com/jbogard/MediatR) for C#.
 It work out-of-the-box with an internal resolver, however it can be 'plugged in' with [Inversify](https://inversify.io/).
 
+See the [Wiki](https://github.com/m4ss1m0g/mediatr-ts/wiki) for more details
+
 ## Request Handler
 
 Below the `RequestHandler` pattern with internal resolver and with the inversify library
@@ -56,7 +58,7 @@ import container from "whatever";
 // inversify.resolver.ts -> Implement the resolver
 class InversifyResolver implements IResolver {
     resolve<T>(name: string): <T> {
-        return c.get(name);
+        return container.get(name);
     }
 
     add(name: string, instance: Function): void {
@@ -76,7 +78,7 @@ class InversifyResolver implements IResolver {
 
 // app.ts -> this can be defined at the beginning of the app
 import settings from "@/models/settings";
-import container from "whatever";
+import InversifyResolver from "whatever";
 
 // Magic happens here
 settings.resolver = new InversifyResolver();
