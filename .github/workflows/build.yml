@@ -6,7 +6,10 @@ name: Build
 on:
   push:
     branches: 
-    - '!master'
+      - '*'         # matches every branch that doesn't contain a '/'
+      - '*/*'       # matches every branch containing a single '/'
+      - '**'        # matches every branch
+      - '!master'   # excludes master
     
   workflow_dispatch:
 
@@ -27,5 +30,5 @@ jobs:
           node-version: ${{ matrix.node-version }}
           cache: 'npm'
       - run: npm install
-      - run: npm build
-      - run: npm test
+      - run: npm run build
+      - run: npm run test
