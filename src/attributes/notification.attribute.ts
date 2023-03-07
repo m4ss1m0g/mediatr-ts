@@ -4,12 +4,12 @@ import DispatchInstance from "@/models/dispatch.instance";
 import settings from "@/settings";
 
 /**
- * Decorate the NotificationHandler with this attribute
+ * Decorate the notificationHandler with this attribute
  * 
  * @param value The request type
  * @param order The order of event
  */
-const NotificationHandler = (value: INotification, order?: number) => {
+const notificationHandler = (value: INotification, order?: number) => {
     return (target: Function): void => {
         const eventName = (value as Function).prototype.constructor.name;
         const handlerName = (target as Function).prototype.constructor.name;
@@ -18,4 +18,4 @@ const NotificationHandler = (value: INotification, order?: number) => {
     };
 };
 
-export default NotificationHandler;
+export default notificationHandler;

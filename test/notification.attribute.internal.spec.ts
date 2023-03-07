@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import INotification from "@/interfaces/inotification";
-import NotificationHandler from "@/attributes/notification.attribute";
+import notificationHandler from "@/attributes/notification.attribute";
 import INotificationHandler from "@/interfaces/inotification.handler";
 import { Mediator, mediatorSettings } from "@/index";
 
@@ -20,7 +20,7 @@ describe("The notification attribute", () => {
         const spyResolver = jest.spyOn(mediatorSettings.resolver, "add");
 
         // Act
-        @NotificationHandler(Ping, 1)
+        @notificationHandler(Ping, 1)
         class Pong1 implements INotificationHandler<Ping> {
             handle(notification: Ping): Promise<void> {
                 throw new Error("Method not implemented.");
@@ -39,7 +39,7 @@ describe("The notification attribute", () => {
         const result: string[] = [];
         const message = "foo";
 
-        @NotificationHandler(Ping, 1)
+        @notificationHandler(Ping, 1)
         class Pong1 implements INotificationHandler<Ping> {
 
             async handle(notification: Ping): Promise<void> {
@@ -61,7 +61,7 @@ describe("The notification attribute", () => {
         const result: string[] = [];
         const message1 = "foo1";
 
-        @NotificationHandler(Ping, 2)
+        @notificationHandler(Ping, 2)
         class Pong2 implements INotificationHandler<Ping> {
 
             async handle(notification: Ping): Promise<void> {
@@ -69,7 +69,7 @@ describe("The notification attribute", () => {
             }
         }
 
-        @NotificationHandler(Ping, 1)
+        @notificationHandler(Ping, 1)
         class Pong1 implements INotificationHandler<Ping> {
 
             async handle(notification: Ping): Promise<void> {
@@ -92,7 +92,7 @@ describe("The notification attribute", () => {
         const result: string[] = [];
         const message = "foo";
 
-        @NotificationHandler(Ping)
+        @notificationHandler(Ping)
         class Pong1 implements INotificationHandler<Ping> {
 
             async handle(notification: Ping): Promise<void> {
@@ -100,7 +100,7 @@ describe("The notification attribute", () => {
             }
         }
 
-        @NotificationHandler(Ping)
+        @notificationHandler(Ping)
         class Pong2 implements INotificationHandler<Ping> {
 
             async handle(notification: Ping): Promise<void> {

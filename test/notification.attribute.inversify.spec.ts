@@ -7,7 +7,7 @@ import {
     IResolver,
     mediatorSettings,
     INotification,
-    NotificationHandler,
+    notificationHandler,
     INotificationHandler,
 } from "@/index";
 import { injectable, Container, inject } from "inversify";
@@ -66,7 +66,7 @@ describe("Notification with inversify", () => {
         // Settings the resolver with Inversify
         mediatorSettings.resolver = new InversifyResolver();
 
-        @NotificationHandler(Ping)
+        @notificationHandler(Ping)
         @injectable()
         class Foo implements INotificationHandler<Ping> {
             @inject(TYPES.IWarrior)

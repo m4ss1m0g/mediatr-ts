@@ -5,7 +5,7 @@ import requestHandler from "@/attributes/request.attribute";
 
 import INotification from "@/interfaces/inotification";
 import INotificationHandler from "@/interfaces/inotification.handler";
-import NotificationHandler from "@/attributes/notification.attribute";
+import notificationHandler from "@/attributes/notification.attribute";
 
 import IDispatcher from "@/interfaces/idispatcher";
 import IResolver from "@/interfaces/iresolver";
@@ -22,7 +22,7 @@ export {
     requestHandler,
 
     INotification,
-    NotificationHandler,
+    notificationHandler,
     INotificationHandler,
 
     IDispatcher,
@@ -44,3 +44,8 @@ export const Handler = requestHandler;
  * @deprecated Use requestHandler instead
  */
 export const RequestHandler = requestHandler;
+
+/**
+ * @deprecated Use notificationHandler instead
+ */
+export const NotificationHandler = notificationHandler;

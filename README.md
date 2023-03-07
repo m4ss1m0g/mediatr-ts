@@ -133,7 +133,7 @@ const result = await mediator.send<string>(new Request(99));
 
 ## Notification Handler
 
-Below a simple example without Inversify. If you want Inversify to resolve the `NotificationHandler` you should configure the `resolver` property of `mediatorSettings` see the `requestHandler` example above.
+Below a simple example without Inversify. If you want Inversify to resolve the `notificationHandler` you should configure the `resolver` property of `mediatorSettings` see the `requestHandler` example above.
 
 ```typescript
 const result: string[] = [];
@@ -144,7 +144,7 @@ class Ping implements INotification {
 }
 
 // The notification handler
-@NotificationHandler(Ping, 1)
+@notificationHandler(Ping, 1)
 class Pong1 implements INotificationHandler<Ping> {
 
     async handle(notification: Ping): Promise<void> {
@@ -162,4 +162,4 @@ mediator.publish(new Ping(message));
 
 The `resolver` can be plugged in with other DI containers, it's enought to implemente the `IResolver` interface and setup the `resolver` property of `mediatorSettings` (like the `Inversify` provider).
 
-The `NotificationHandler` can be rewritten implementing the `IDispatcher` and setup the `dispatcher` property of `mediatorSettings`.
+The `notificationHandler` can be rewritten implementing the `IDispatcher` and setup the `dispatcher` property of `mediatorSettings`.
