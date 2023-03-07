@@ -25,7 +25,7 @@ This release support **Notifications**.
   
 ### Changed
 
-- `@Handler` is now deprecated use `@requestHandler` instead.
+- `@Handler` is now deprecated use `@RequestHandler` instead.
 
 ### Breaking changes
 
