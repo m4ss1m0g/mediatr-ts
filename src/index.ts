@@ -1,7 +1,7 @@
 
 import IRequest from "@/interfaces/irequest";
 import IRequestHandler from "@/interfaces/irequest.handler";
-import RequestHandler from "@/attributes/request.attribute";
+import requestHandler from "@/attributes/request.attribute";
 
 import INotification from "@/interfaces/inotification";
 import INotificationHandler from "@/interfaces/inotification.handler";
@@ -19,7 +19,7 @@ import DispatchInstance from "@/models/dispatch.instance";
 export {
     IRequest,
     IRequestHandler,
-    RequestHandler,
+    requestHandler,
 
     INotification,
     NotificationHandler,
@@ -36,6 +36,11 @@ export {
 };
 
 /**
- * @deprecated Use RequestHandler instead
+ * @deprecated Use requestHandler instead
  */
-export const Handler = RequestHandler;
+export const Handler = requestHandler;
+
+/**
+ * @deprecated Use requestHandler instead
+ */
+export const RequestHandler = requestHandler;

@@ -3,15 +3,15 @@ import IRequest from "@/interfaces/irequest";
 import settings from "@/settings";
 
 /**
- * Decorate the RequestHandler with this attribute
+ * Decorate the requestHandler with this attribute
  * 
  * @param value The request type
  */
-const RequestHandler = <T>(value: IRequest<T>) => {
+const requestHandler = <T>(value: IRequest<T>) => {
     return (target: Function): void => {
         const name = (value as Function).prototype.constructor.name;
         settings.resolver.add(name, target);
     };
 };
 
-export default RequestHandler;
+export default requestHandler;

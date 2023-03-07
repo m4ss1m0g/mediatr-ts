@@ -1,4 +1,4 @@
-import { Mediator, Handler, IRequestHandler, mediatorSettings, RequestHandler } from "@/index";
+import { Mediator, Handler, IRequestHandler, mediatorSettings, requestHandler } from "@/index";
 import Resolver from "@/models/resolver";
 
 describe("Resolver with local container", () => {
@@ -15,7 +15,7 @@ describe("Resolver with local container", () => {
             name: string;
         }
 
-        @RequestHandler(Request)
+        @requestHandler(Request)
         // eslint-disable-next-line @typescript-eslint/no-unused-vars
         class HandlerTest implements IRequestHandler<Request, string> {
             handle(value: Request): Promise<string> {
