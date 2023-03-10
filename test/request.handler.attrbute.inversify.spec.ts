@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/ban-types */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import "reflect-metadata";
-import { Mediator, IRequestHandler, IResolver, mediatorSettings, IRequest, RequestHandler } from "@/index";
+import { Mediator, IRequestHandler, IResolver, mediatorSettings, IRequest, requestHandler } from "@/index";
 import { injectable, Container, inject } from "inversify";
 
 describe("Resolver with inversify", () => {
@@ -86,7 +86,7 @@ describe("Resolver with inversify", () => {
             }
         }
 
-        @RequestHandler(Request)
+        @requestHandler(Request)
         @injectable()
         // eslint-disable-next-line @typescript-eslint/no-unused-vars
         class HandlerRequest implements IRequestHandler<Request, string> {

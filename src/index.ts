@@ -1,11 +1,11 @@
 
 import IRequest from "@/interfaces/irequest";
 import IRequestHandler from "@/interfaces/irequest.handler";
-import RequestHandler from "@/attributes/request.attribute";
+import requestHandler from "@/attributes/request.attribute";
 
 import INotification from "@/interfaces/inotification";
 import INotificationHandler from "@/interfaces/inotification.handler";
-import NotificationHandler from "@/attributes/notification.attribute";
+import notificationHandler from "@/attributes/notification.attribute";
 
 import IDispatcher from "@/interfaces/idispatcher";
 import IResolver from "@/interfaces/iresolver";
@@ -19,10 +19,10 @@ import DispatchInstance from "@/models/dispatch.instance";
 export {
     IRequest,
     IRequestHandler,
-    RequestHandler,
+    requestHandler,
 
     INotification,
-    NotificationHandler,
+    notificationHandler,
     INotificationHandler,
 
     IDispatcher,
@@ -36,6 +36,16 @@ export {
 };
 
 /**
- * @deprecated Use RequestHandler instead
+ * @deprecated Use requestHandler instead
  */
-export const Handler = RequestHandler;
+export const Handler = requestHandler;
+
+/**
+ * @deprecated Use requestHandler instead
+ */
+export const RequestHandler = requestHandler;
+
+/**
+ * @deprecated Use notificationHandler instead
+ */
+export const NotificationHandler = notificationHandler;
