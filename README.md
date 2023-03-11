@@ -11,15 +11,12 @@
 ![coverage branches](badges/badge-branches.svg)
 
 Porting to typescript of the famous [MediatR](https://github.com/jbogard/MediatR) for C#.
-It work out-of-the-box with an internal resolver, however it can be 'plugged in' with [Inversify](https://inversify.io/).
+It work out-of-the-box with an internal resolver, however it can be 'plugged in' with dependency injection frameworks like [Inversify](https://inversify.io/).
 
-See the [Wiki](https://github.com/m4ss1m0g/mediatr-ts/wiki) for more details
+## Supported concepts
 
-## Request Handler
-
+### Request handlers
 Below the `requestHandler` pattern with internal resolver and with the inversify library
-
-### Internal resolver
 
 ```typescript
 // request.ts -> Define the request
@@ -48,12 +45,171 @@ const result = await mediator.send<string>(r);
 // result = "Value passed Foo"
 ```
 
-### Inversify resolver
+### Notification handlers
+```typescript
+import { Mediator } from "@mediatr-ts";
 
-At the very beginning of your app you **MUST** setup the resolver with inversify, or at least **BEFORE** using the `@requestHandler` attribute and/or the `Mediator` class.
+const result: string[] = [];
+
+// The notification class
+class Ping implements INotification {
+    constructor(public value?: string){}
+}
+
+// The notification handler
+@notificationHandler(Ping)
+class Pong1 implements INotificationHandler<Ping> {
+    async handle(notification: Ping): Promise<void> {
+        result.push(notification.value);
+    }
+}
+
+const mediator = new Mediator();
+mediator.publish(new Ping(message));
+
+// result: [ "Foo" ]
+```
+
+#### Changing the order of execution
+By default, the notification handlers will run in the order that they are loaded in. This might not be desirable, since it depends on the order of the imports. To change the order, you can set it explicitly.
 
 ```typescript
-import container from "whatever";
+import { mediatorSettings, Mediator } from "@mediatr-ts";
+
+const result: string[] = [];
+
+// The notification class
+class Ping implements INotification {
+    constructor(public value?: string){}
+}
+
+// The notification handler
+@notificationHandler(Ping)
+class Pong2 implements INotificationHandler<Ping> {
+    async handle(notification: Ping): Promise<void> {
+        result.push(notification.value);
+    }
+}
+
+// The notification handler
+@notificationHandler(Ping)
+class Pong1 implements INotificationHandler<Ping> {
+    async handle(notification: Ping): Promise<void> {
+        result.push(notification.value);
+    }
+}
+
+const mediator = new Mediator();
+mediator.publish(new Ping(message));
+
+// result: [ "Foo" ]
+
+// Set the order of the pipeline behaviors. PipelineBehaviorTest2 will be executed first, and then PipelineBehaviorTest1.
+mediatorSettings.dispatcher.notifications.setOrder(Ping, [
+    Pong2, 
+    Pong1
+]);
+
+const mediator = new Mediator();
+
+//...
+```
+
+### Pipeline behaviors
+```typescript
+class Request {
+    name?: string;
+}
+
+@requestHandler(Request)
+class HandlerTest implements IRequestHandler<Request, string> {
+    handle(value: Request): Promise<string> {
+        return Promise.resolve(`Value passed ${value.name}`);
+    }
+}
+
+@pipelineBehavior()
+class PipelineBehaviorTest1 implements IPipelineBehavior {
+    async handle(request: IRequest<unknown>, next: () => unknown): Promise<unknown> {
+        if(request instanceof Request) {
+            request.name += " with stuff 1";
+        }
+
+        let result = await next();
+        if(typeof result === "string") {
+            result += " after 1";
+        }
+
+        return result;
+    }
+}
+
+@pipelineBehavior()
+class PipelineBehaviorTest2 implements IPipelineBehavior {
+    async handle(request: IRequest<unknown>, next: () => unknown): Promise<unknown> {
+        if(request instanceof Request) {
+            request.name += " with stuff 2";
+        }
+
+        let result = await next();
+        if(typeof result === "string") {
+            result += " after 2";
+        }
+
+        return result;
+    }
+}
+
+const r = new Request();
+r.name = "Foo";
+
+const mediator = new Mediator();
+const result = await mediator.send(r);
+
+// result will be "Value passed Foo with stuff 2 with stuff 1 after 1 after 2"
+```
+
+#### Changing the order of execution
+By default, the pipeline behaviors will run in the order that they are loaded in. This might not be desirable, since it depends on the order of the imports. To change the order, you can set it explicitly.
+
+```typescript
+import { mediatorSettings, Mediator } from "@mediatr-ts";
+
+@pipelineBehavior()
+class PipelineBehaviorTest1 implements IPipelineBehavior {
+    async handle(request: IRequest<unknown>, next: () => unknown): Promise<unknown> {
+        return result;
+    }
+}
+
+@pipelineBehavior()
+class PipelineBehaviorTest2 implements IPipelineBehavior {
+    async handle(request: IRequest<unknown>, next: () => unknown): Promise<unknown> {
+        return result;
+    }
+}
+
+// Set the order of the pipeline behaviors. PipelineBehaviorTest2 will be executed first, and then PipelineBehaviorTest1.
+mediatorSettings.dispatcher.behaviors.setOrder([
+    PipelineBehaviorTest2, 
+    PipelineBehaviorTest1
+]);
+
+const mediator = new Mediator();
+
+//...
+```
+
+## Integrating with Dependency Injection containers
+
+### Inversify
+At the very beginning of your app you **MUST** setup the resolver with Inversify, or at least **BEFORE** using the `@requestHandler` attribute and/or the `Mediator` class.
+
+```typescript
+import { Container } from "inversify";
+import { mediatorSettings, Mediator } from "@mediatr-ts";
+
+const container = new Container();
 
 // inversify.resolver.ts -> Implement the resolver
 class InversifyResolver implements IResolver {
@@ -76,12 +232,8 @@ class InversifyResolver implements IResolver {
     }
 }
 
-// app.ts -> this can be defined at the beginning of the app
-import settings from "@/models/settings";
-import InversifyResolver from "whatever";
-
-// Magic happens here
-settings.resolver = new InversifyResolver();
+// Set the resolver of MediatR-TS
+mediatorSettings.resolver = new InversifyResolver();
 
 // You can later configure the inversify container
 interface IWarrior {
@@ -101,8 +253,6 @@ class Ninja implements IWarrior {
 
 container.bind<IWarrior>(TYPES.IWarrior).to(Ninja);
 
-// code
-
 // The request object
 class Request implements IRequest<number> {
     public thenumber: number;
@@ -113,7 +263,6 @@ class Request implements IRequest<number> {
 }
 
 // Decorate the handler request with Handler and injectable attribute, notice the warrior property
-
 @requestHandler(Request)
 @injectable()
 class HandlerRequest implements IRequestHandler<Request, string> {
@@ -130,36 +279,3 @@ const result = await mediator.send<string>(new Request(99));
 
 // result => "We has 99 ninja fight"
 ```
-
-## Notification Handler
-
-Below a simple example without Inversify. If you want Inversify to resolve the `notificationHandler` you should configure the `resolver` property of `mediatorSettings` see the `requestHandler` example above.
-
-```typescript
-const result: string[] = [];
-
-// The notification class
-class Ping implements INotification {
-    constructor(public value?: string){}
-}
-
-// The notification handler
-@notificationHandler(Ping, 1)
-class Pong1 implements INotificationHandler<Ping> {
-
-    async handle(notification: Ping): Promise<void> {
-        result.push(notification.value);
-    }
-}
-
-const mediator = new Mediator();
-mediator.publish(new Ping(message));
-
-// result: [ "Foo" ]
-```
-
-## Notes
-
-The `resolver` can be plugged in with other DI containers, it's enought to implemente the `IResolver` interface and setup the `resolver` property of `mediatorSettings` (like the `Inversify` provider).
-
-The `notificationHandler` can be rewritten implementing the `IDispatcher` and setup the `dispatcher` property of `mediatorSettings`.

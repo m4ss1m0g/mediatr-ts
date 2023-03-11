@@ -1,5 +1,5 @@
-import IDispatcher from "@/interfaces/idispatcher";
-import IResolver from "@/interfaces/iresolver";
+import type IDispatcher from "@/interfaces/idispatcher";
+import type IResolver from "@/interfaces/iresolver";
 import Dispatcher from "@/models/dispatcher";
 import Resolver from "@/models/resolver";
 
@@ -15,7 +15,7 @@ class MediatrSettings {
      * @type {IResolver}
      * @memberof MediatrSettings
      */
-    resolver: IResolver = new Resolver();
+    resolver: IResolver;
 
     /**
      * The dispatcher instance
@@ -23,7 +23,13 @@ class MediatrSettings {
      * @type {IDispatcher}
      * @memberof MediatrSettings
      */
-    dispatcher: IDispatcher = new Dispatcher();
+    dispatcher: IDispatcher;
+
+    constructor() {
+        this.resolver = new Resolver();
+        this.dispatcher = new Dispatcher();
+    }
 }
 
-export default new MediatrSettings();
+const mediatorSettings = new MediatrSettings();
+export default mediatorSettings;

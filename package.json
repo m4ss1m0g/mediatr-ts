@@ -1,12 +1,13 @@
 {
     "name": "mediatr-ts",
-    "version": "0.4.0",
+    "version": "1.0.0",
     "description": "Mimic the famous MediatR csharp library see: (https://github.com/jbogard/MediatR)",
     "main": "lib/index.js",
     "scripts": {
         "start": "ts-node src/index.ts",
         "test": "rimraf lib && jest",
         "build": "rimraf lib && tsc --project tsconfig.production.json && tsc-alias",
+        "detect-circular-dependencies": "npx madge --circular --extensions ts ./",
         "prepare": "npm run build",
         "test:coverage": "npm test -- --coverage",
         "test:badges": "npm run test:coverage && jest-coverage-badges --output badges"

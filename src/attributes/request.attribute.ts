@@ -1,16 +1,16 @@
 /* eslint-disable @typescript-eslint/ban-types */
-import IRequest from "@/interfaces/irequest";
-import settings from "@/settings";
+import type { IRequestClass } from "@/interfaces/irequest";
+import {mediatorSettings} from "@/index";
 
 /**
  * Decorate the requestHandler with this attribute
  * 
  * @param value The request type
  */
-const requestHandler = <T>(value: IRequest<T>) => {
+const requestHandler = <T>(value: IRequestClass<T>) => {
     return (target: Function): void => {
         const name = (value as Function).prototype.constructor.name;
-        settings.resolver.add(name, target);
+        mediatorSettings.resolver.add(name, target);
     };
 };
 

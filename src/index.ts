@@ -1,20 +1,18 @@
-
-import IRequest from "@/interfaces/irequest";
-import IRequestHandler from "@/interfaces/irequest.handler";
-import requestHandler from "@/attributes/request.attribute";
-
-import INotification from "@/interfaces/inotification";
-import INotificationHandler from "@/interfaces/inotification.handler";
-import notificationHandler from "@/attributes/notification.attribute";
-
-import IDispatcher from "@/interfaces/idispatcher";
-import IResolver from "@/interfaces/iresolver";
-
-import IMediator from "@/interfaces/imediator";
-import Mediator from "@/models/mediator";
 import mediatorSettings from "@/settings";
 
-import DispatchInstance from "@/models/dispatch.instance";
+import type IRequest from "@/interfaces/irequest";
+import type IRequestHandler from "@/interfaces/irequest.handler";
+import requestHandler from "@/attributes/request.attribute";
+
+import type INotification from "@/interfaces/inotification";
+import type INotificationHandler from "@/interfaces/inotification.handler";
+import notificationHandler from "@/attributes/notification.attribute";
+
+import type IDispatcher from "@/interfaces/idispatcher";
+import type IResolver from "@/interfaces/iresolver";
+
+import type IMediator from "@/interfaces/imediator";
+import Mediator from "@/models/mediator";
 
 export {
     IRequest,
@@ -26,7 +24,6 @@ export {
     INotificationHandler,
 
     IDispatcher,
-    DispatchInstance,
     
     IResolver,
 

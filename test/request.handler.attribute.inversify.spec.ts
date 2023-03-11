@@ -7,7 +7,6 @@ import { injectable, Container, inject } from "inversify";
 describe("Resolver with inversify", () => {
     beforeEach(()=>{
         mediatorSettings.resolver.clear();
-        mediatorSettings.dispatcher.clear();
     });
 
     test("Should resolve own instances", () => {
@@ -91,10 +90,10 @@ describe("Resolver with inversify", () => {
         // eslint-disable-next-line @typescript-eslint/no-unused-vars
         class HandlerRequest implements IRequestHandler<Request, string> {
             @inject(TYPES.IWarrior)
-            public warrior: IWarrior;
+            public warrior?: IWarrior;
 
             public handle(value: Request): Promise<string> {
-                return Promise.resolve(`We has ${value.thenumber} ${this.warrior.fight()}`);
+                return Promise.resolve(`We has ${value.thenumber} ${this.warrior?.fight()}`);
             }
         }
 

@@ -1,10 +1,9 @@
-import { Mediator, Handler, IRequestHandler, mediatorSettings, requestHandler } from "@/index";
+import { Mediator, IRequestHandler, mediatorSettings, requestHandler } from "@/index";
 import Resolver from "@/models/resolver";
 
 describe("Resolver with local container", () => {
     beforeEach(() => {
         mediatorSettings.resolver.clear();
-        mediatorSettings.dispatcher.clear();
     });
 
     test("Should resolve existing instance", async () => {
@@ -12,7 +11,7 @@ describe("Resolver with local container", () => {
         mediatorSettings.resolver = new Resolver();
 
         class Request {
-            name: string;
+            name?: string;
         }
 
         @requestHandler(Request)
@@ -42,10 +41,10 @@ describe("Resolver with local container", () => {
         const add = jest.spyOn(mediatorSettings.resolver, "add");
 
         class Request {
-            name: string;
+            name?: string;
         }
 
-        @Handler(Request)
+        @requestHandler(Request)
         // eslint-disable-next-line @typescript-eslint/no-unused-vars
         class HandlerTest implements IRequestHandler<Request, string> {
             handle(value: Request): Promise<string> {
@@ -62,10 +61,10 @@ describe("Resolver with local container", () => {
         mediatorSettings.resolver = new Resolver();
 
         class Request {
-            name: string;
+            name?: string;
         }
 
-        @Handler(Request)
+        @requestHandler(Request)
         // eslint-disable-next-line @typescript-eslint/no-unused-vars
         class HandlerTest implements IRequestHandler<Request, string> {
             handle(value: Request): Promise<string> {
@@ -74,7 +73,7 @@ describe("Resolver with local container", () => {
         }
 
         const fx = () => {
-            @Handler(Request)
+            @requestHandler(Request)
             // eslint-disable-next-line @typescript-eslint/no-unused-vars
             class HandlerTest implements IRequestHandler<Request, string> {
                 handle(value: Request): Promise<string> {

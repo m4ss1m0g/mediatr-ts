@@ -15,3 +15,5 @@ export default interface INotificationHandler<T> {
      */
     handle(notification: T): Promise<void>;
 }
+
+export type INotificationHandlerClass<T> = new (...args: unknown[]) => INotificationHandler<T>;
