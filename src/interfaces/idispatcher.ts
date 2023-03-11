@@ -1,4 +1,10 @@
-import DispatchInstance from "@/models/dispatch.instance";
+/* eslint-disable @typescript-eslint/ban-types */
+
+import type { BehaviorMappings, NotificationMappings } from "@/models/dispatcher/mappings";
+
+export type OrderMapping<TData = {}> = TData & {
+    order?: number;
+}
 
 /**
  * The dispatcher interface
@@ -9,35 +15,6 @@ import DispatchInstance from "@/models/dispatch.instance";
  * @interface IDispatcher
  */
 export default interface IDispatcher {
-    /**
-     * Get all notification handlers order by order field for the specified event name
-     *
-     * @param {string} eventName The event name for which to get handlers
-     * @returns {DispatchInstance[]}
-     * @memberof IDispatcher
-     */
-    getAll(eventName: string): DispatchInstance[];
-
-    /**
-     * Add a dispatch instance to the container
-     *
-     * @param {DispatchInstance} instance The instance to add
-     * @memberof IDispatcher
-     */
-    add(instance: DispatchInstance): void;
-
-    /**
-     * Remove all handlers for the specific event name
-     *
-     * @param {string} eventName The event for which remove the handlers
-     * @memberof IDispatcher
-     */
-    remove(eventName: string): void;
-
-    /**
-     * Clear all instances from the container
-     *
-     * @memberof IDispatcher
-     */
-    clear(): void;
+    get notifications(): NotificationMappings;
+    get behaviors(): BehaviorMappings;
 }

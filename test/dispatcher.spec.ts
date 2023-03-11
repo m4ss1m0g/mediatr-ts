@@ -1,49 +1,73 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
+import type { INotification, INotificationHandler } from "@/index";
+import { mediatorSettings } from "@/index";
 import Dispatcher from "@/models/dispatcher";
-import DispatcherInstance from "@/models/dispatch.instance";
 
 describe("The internal dispatcher", () => {
+    class Ping implements INotification {
+        constructor(public value: string){}
+    }
+
+    class Pong1 implements INotificationHandler<Ping> {
+        handle(_notification: Ping): Promise<void> {
+            throw new Error("Method not implemented.");
+        }
+    }
+
+    class Pong2 implements INotificationHandler<Ping> {
+        handle(_notification: Ping): Promise<void> {
+            throw new Error("Method not implemented.");
+        }
+    }
+
+    class Pang implements INotification {
+        constructor(public value: string){}
+    }
+
+    class Pang1 implements INotificationHandler<Pang> {
+        handle(_notification: Pang): Promise<void> {
+            throw new Error("Method not implemented.");
+        }
+    }
+
+    class Foo implements INotification {
+        constructor(public value: string){}
+    }
+
+    class Bar implements INotificationHandler<Foo> {
+        handle(_notification: Foo): Promise<void> {
+            throw new Error("Method not implemented.");
+        }
+    }
+
+    beforeEach(()=>{
+        mediatorSettings.resolver.clear();
+        mediatorSettings.dispatcher.notifications.clear();
+    });
+
     test("Should add a new DispatchInstance to the container", () => {
         // Arrange
         const d = new Dispatcher();
 
         // Act
-        d.add(new DispatcherInstance("Ping", "Pong1", 1));
+        d.notifications.add({ notification: Ping, handler: Pong1, order: 1 });
 
         // Assert
-        const items = d.getAll("Ping");
+        const items = d.notifications.getAll(Ping);
         expect(items.length).toBe(1);
-    });
-
-    test("Should remove all events from the dispatcher container", () => {
-        // Arrange
-        const d = new Dispatcher();
-        d.add(new DispatcherInstance("Ping", "Pong1", 1));
-        d.add(new DispatcherInstance("Ping", "Pong2", 2));
-
-        d.add(new DispatcherInstance("Pang", "Pang1", 1));
-
-        // Act
-        d.remove("Ping");
-
-        // Assert
-        const itemsPang = d.getAll("Pang");
-        expect(itemsPang.length).toBe(1);
-
-        const fx = () => d.getAll("Ping");
-        expect(fx).toThrowError();
     });
 
     test("Should clear all instances from the container", () => {
         // Arrange
         const d = new Dispatcher();
-        d.add(new DispatcherInstance("Ping", "Pong1", 1));
-        d.add(new DispatcherInstance("Ping", "Pong2", 2));
+        d.notifications.add({ notification: Ping, handler: Pong1, order: 1 });
+        d.notifications.add({ notification: Ping, handler: Pong2, order: 2 });
 
         // Act
-        d.clear();
+        d.notifications.clear();
 
         // Assert
-        const fx = () => d.getAll("Ping");
+        const fx = () => d.notifications.getAll(Ping);
         expect(fx).toThrowError();
     });
 
@@ -52,7 +76,7 @@ describe("The internal dispatcher", () => {
         const d = new Dispatcher();
 
         // Assert
-        const fx = () => d.getAll("Not existing class");
+        const fx = () => d.notifications.getAll(Ping);
         expect(fx).toThrowError();
     });
 
@@ -61,12 +85,12 @@ describe("The internal dispatcher", () => {
         const d = new Dispatcher();
 
         // Act
-        d.add(new DispatcherInstance("Ping", "Pong1", 1));
-        d.add(new DispatcherInstance("Ping", "Pong2", 2));
-        d.add(new DispatcherInstance("Foo", "Bar", 1));
+        d.notifications.add({ notification: Ping, handler: Pong1, order: 1 })
+        d.notifications.add({ notification: Ping, handler: Pong2, order: 2 });
+        d.notifications.add({ notification: Foo, handler: Bar, order: 1 });
 
         // Assert
-        const items = d.getAll("Ping");
+        const items = d.notifications.getAll(Ping);
         expect(items.length).toBe(2);
     });
 });

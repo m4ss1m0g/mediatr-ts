@@ -1,5 +1,5 @@
-import INotification from "@/interfaces/inotification";
-import IRequest from "./irequest";
+import type INotification from "@/interfaces/inotification";
+import type IRequest from "./irequest";
 
 /**
  * The mediator interface
@@ -25,5 +25,5 @@ export default interface IMediator {
      * @returns {Promise<void>}
      * @memberof IMediator
      */
-    publish(message: INotification): Promise<void[]>;
+    publish(message: INotification): Promise<void>;
 }

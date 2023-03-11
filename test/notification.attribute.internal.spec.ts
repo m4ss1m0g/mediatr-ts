@@ -1,26 +1,26 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import INotification from "@/interfaces/inotification";
+import type INotification from "@/interfaces/inotification";
 import notificationHandler from "@/attributes/notification.attribute";
-import INotificationHandler from "@/interfaces/inotification.handler";
+import type INotificationHandler from "@/interfaces/inotification.handler";
 import { Mediator, mediatorSettings } from "@/index";
 
 describe("The notification attribute", () => {
     class Ping implements INotification {
-        constructor(public value?: string){}
+        constructor(public value: string){}
     }
 
     beforeEach(()=>{
         mediatorSettings.resolver.clear();
-        mediatorSettings.dispatcher.clear();
+        mediatorSettings.dispatcher.notifications.clear();
     });
 
     test("Should add instance to dispatcher and resolver", () => {
         // Arrange
-        const spyDispatcher = jest.spyOn(mediatorSettings.dispatcher, "add");
+        const spyDispatcher = jest.spyOn(mediatorSettings.dispatcher.notifications, "add");
         const spyResolver = jest.spyOn(mediatorSettings.resolver, "add");
 
         // Act
-        @notificationHandler(Ping, 1)
+        @notificationHandler(Ping)
         class Pong1 implements INotificationHandler<Ping> {
             handle(notification: Ping): Promise<void> {
                 throw new Error("Method not implemented.");
@@ -39,7 +39,7 @@ describe("The notification attribute", () => {
         const result: string[] = [];
         const message = "foo";
 
-        @notificationHandler(Ping, 1)
+        @notificationHandler(Ping)
         class Pong1 implements INotificationHandler<Ping> {
 
             async handle(notification: Ping): Promise<void> {
@@ -56,12 +56,11 @@ describe("The notification attribute", () => {
         expect(result[0]).toBe(message);
     });
 
-    test("Should resolve and call the notification in specific order", () => {
+    test("Should resolve and call the notification in specific order when", () => {
         // Arrange
         const result: string[] = [];
         const message1 = "foo1";
 
-        @notificationHandler(Ping, 2)
         class Pong2 implements INotificationHandler<Ping> {
 
             async handle(notification: Ping): Promise<void> {
@@ -69,7 +68,6 @@ describe("The notification attribute", () => {
             }
         }
 
-        @notificationHandler(Ping, 1)
         class Pong1 implements INotificationHandler<Ping> {
 
             async handle(notification: Ping): Promise<void> {
@@ -77,6 +75,9 @@ describe("The notification attribute", () => {
             }
         }
 
+        mediatorSettings.dispatcher.notifications.add({ notification: Ping, handler: Pong2, order: 2 });
+        mediatorSettings.dispatcher.notifications.add({ notification: Ping, handler: Pong1, order: 1 });
+        
         // Act
         const mediator = new Mediator();
         mediator.publish(new Ping(message1));

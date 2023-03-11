@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/ban-types */
-import INotification from "@/interfaces/inotification";
-import DispatchInstance from "@/models/dispatch.instance";
-import settings from "@/settings";
+import type { INotificationClass } from "@/interfaces/inotification";
+import type { INotificationHandlerClass } from "@/interfaces/inotification.handler";
+import {mediatorSettings} from "@/index";
 
 /**
  * Decorate the notificationHandler with this attribute
@@ -9,12 +9,12 @@ import settings from "@/settings";
  * @param value The request type
  * @param order The order of event
  */
-const notificationHandler = (value: INotification, order?: number) => {
+const notificationHandler = (value: INotificationClass) => {
     return (target: Function): void => {
-        const eventName = (value as Function).prototype.constructor.name;
-        const handlerName = (target as Function).prototype.constructor.name;
-        settings.resolver.add(handlerName, target);
-        settings.dispatcher.add(new DispatchInstance(eventName, handlerName, order || 0));
+        mediatorSettings.dispatcher.notifications.add({
+            notification: value,
+            handler: target as INotificationHandlerClass<unknown>
+        });
     };
 };
 

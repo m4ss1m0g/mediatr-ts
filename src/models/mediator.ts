@@ -1,10 +1,12 @@
-import { IRequestHandler } from "@/index";
-import IMediator from "@/interfaces/imediator";
-import INotification from "@/interfaces/inotification";
-import INotificationhandler from "@/interfaces/inotification.handler";
-import IRequest from "@/interfaces/irequest";
-import DispatchInstance from "@/models/dispatch.instance";
-import settings from "@/settings";
+/* eslint-disable @typescript-eslint/ban-types */
+import type { IRequestHandler } from "@/index";
+import type IMediator from "@/interfaces/imediator";
+import type INotification from "@/interfaces/inotification";
+import type { INotificationClass } from "@/interfaces/inotification";
+import type INotificationHandler from "@/interfaces/inotification.handler";
+import type IRequest from "@/interfaces/irequest";
+import {mediatorSettings} from "@/index";
+import type IPipelineBehavior from "@/interfaces/ipipeline.behavior";
 
 /**
  * The mediator class
@@ -15,7 +17,6 @@ import settings from "@/settings";
  * @implements {IMediator}
  */
 export default class Mediator implements IMediator {
-    
     /**
      * Send a request to the mediator
      *
@@ -27,8 +28,25 @@ export default class Mediator implements IMediator {
     public async send<T>(request: IRequest<T>): Promise<T> {
         const name = request.constructor.name;
 
-        const handler = settings.resolver.resolve<IRequestHandler<IRequest<T>, T>>(name);
-        return handler.handle(request);
+        const handler = mediatorSettings.resolver.resolve<IRequestHandler<IRequest<T>, T>>(name);
+        const behaviors = mediatorSettings.dispatcher.behaviors
+            .getAll()
+            .map(p => p.behavior);
+        
+        let currentBehaviorIndex = 0;
+        const next = async (): Promise<T> => {
+            if(currentBehaviorIndex < behaviors.length) {
+                const behaviorClass = behaviors[currentBehaviorIndex];
+                const behavior = mediatorSettings.resolver.resolve<IPipelineBehavior>((behaviorClass as unknown as Function).name);
+                currentBehaviorIndex++;
+                return await behavior.handle(request, next) as Promise<T>;
+            }
+            else {
+                return await handler.handle(request);
+            }
+        };
+
+        return await next();
     }
 
     /**
@@ -38,17 +56,12 @@ export default class Mediator implements IMediator {
      * @returns {Promise<void>}
      * @memberof Mediator
      */
-    public async publish(message: INotification): Promise<void[]> {
-        const name = message.constructor.name;
-        const events = settings.dispatcher.getAll(name);
+    public async publish(message: INotification): Promise<void> {
+        const events = mediatorSettings.dispatcher.notifications.getAll(message.constructor as INotificationClass);
 
-        const e: Promise<void>[] = [];
-
-        events.forEach(async (p: DispatchInstance) => {
-            const handler = settings.resolver.resolve<INotificationhandler<INotification>>(p.handlerName);
-            e.push(handler.handle(message));
-        });
-
-        return Promise.all(e);
+        await Promise.all(events.map(async (p) => {
+            const handler = mediatorSettings.resolver.resolve<INotificationHandler<INotification>>((p.handler as unknown as Function).name);
+            return handler.handle(message);
+        }));
     }
 }

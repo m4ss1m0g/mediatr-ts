@@ -15,7 +15,7 @@ import { injectable, Container, inject } from "inversify";
 describe("Notification with inversify", () => {
     beforeEach(() => {
         mediatorSettings.resolver.clear();
-        mediatorSettings.dispatcher.clear();
+        mediatorSettings.dispatcher.notifications.clear();
     });
 
     test("Should resolve the notification and inject inversify interfaces", async () => {
@@ -70,10 +70,10 @@ describe("Notification with inversify", () => {
         @injectable()
         class Foo implements INotificationHandler<Ping> {
             @inject(TYPES.IWarrior)
-            public warrior: IWarrior;
+            public warrior?: IWarrior;
 
             async handle(value: Ping): Promise<void> {
-                result = "We has " + value.thenumber + " " + this.warrior.fight();
+                result = "We has " + value.thenumber + " " + this.warrior?.fight();
             }
         }
 
