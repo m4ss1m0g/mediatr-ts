@@ -8,7 +8,7 @@
     "scripts": {
         "start": "ts-node src/index.ts",
         "test": "rimraf lib && jest",
-        "build": "rimraf lib && npx tsc -b tsconfig.production.cjs.json tsconfig.production.esm.json tsconfig.production.types.json && tsc-alias",
+        "build": "rimraf lib && npx tsc -b tsconfig.production.cjs.json tsconfig.production.esm.json tsconfig.production.types.json && tsc-alias --project tsconfig.production.types.json && tsc-alias --project tsconfig.production.cjs.json && tsc-alias --project tsconfig.production.esm.json",
         "prepare": "npm run build",
         "test:coverage": "npm test -- --coverage",
         "test:badges": "npm run test:coverage && jest-coverage-badges --output badges"
