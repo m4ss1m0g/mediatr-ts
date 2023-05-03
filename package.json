@@ -1,12 +1,14 @@
 {
     "name": "mediatr-ts",
     "version": "1.0.0",
+    "type": "module",
     "description": "Mimic the famous MediatR csharp library see: (https://github.com/jbogard/MediatR)",
-    "main": "lib/index.js",
+    "types": "lib/types/index.d.ts",
+    "main": "lib/cjs/index.js",
     "scripts": {
         "start": "ts-node src/index.ts",
         "test": "rimraf lib && jest",
-        "build": "rimraf lib && tsc --project tsconfig.production.json && tsc-alias",
+        "build": "rimraf lib && npx tsc -b tsconfig.production.cjs.json tsconfig.production.esm.json tsconfig.production.types.json && tsc-alias",
         "prepare": "npm run build",
         "test:coverage": "npm test -- --coverage",
         "test:badges": "npm run test:coverage && jest-coverage-badges --output badges"
@@ -41,5 +43,13 @@
     },
     "files": [
         "lib/*"
-    ]
+    ],
+    "exports": {
+        ".": {
+            "types": "./lib/types/*.d.ts",
+            "require": "./lib/cjs/*.js",
+            "import": "./lib/esm/*.js",
+            "default": "./lib/esm/*.js"
+        }
+    }
 }
