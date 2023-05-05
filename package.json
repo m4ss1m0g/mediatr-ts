@@ -11,7 +11,7 @@
         "build": "rimraf lib && npx tsc -b tsconfig.production.cjs.json tsconfig.production.esm.json tsconfig.production.types.json && tsc-alias --project tsconfig.production.types.json && tsc-alias --project tsconfig.production.cjs.json && tsc-alias --project tsconfig.production.esm.json",
         "prepare": "npm run build",
         "test:coverage": "npm test -- --coverage",
-        "test:badges": "npm run test:coverage && jest-coverage-badges --output badges"
+        "test:badges": "npm run test:coverage && jest-coverage-badges-ng --output badges"
     },
     "keywords": [
         "mediatr",
@@ -33,7 +33,7 @@
         "eslint": "^8.21.0",
         "inversify": "^6.0.1",
         "jest": "^28.1.3",
-        "jest-coverage-badges": "^1.1.2",
+        "jest-coverage-badges-ng": "^1.0.1",
         "reflect-metadata": "^0.1.13",
         "rimraf": "^3.0.2",
         "ts-jest": "^28.0.7",
