@@ -1,15 +1,17 @@
 {
     "name": "mediatr-ts",
-    "version": "1.0.0",
+    "version": "1.1.0",
+    "type": "module",
     "description": "Mimic the famous MediatR csharp library see: (https://github.com/jbogard/MediatR)",
-    "main": "lib/index.js",
+    "types": "lib/types/index.d.ts",
+    "main": "lib/cjs/index.js",
     "scripts": {
         "start": "ts-node src/index.ts",
         "test": "rimraf lib && jest",
-        "build": "rimraf lib && tsc --project tsconfig.production.json && tsc-alias",
+        "build": "rimraf lib && npx tsc -b tsconfig.production.cjs.json tsconfig.production.esm.json tsconfig.production.types.json && tsc-alias --project tsconfig.production.types.json && tsc-alias --project tsconfig.production.cjs.json && tsc-alias --project tsconfig.production.esm.json",
         "prepare": "npm run build",
         "test:coverage": "npm test -- --coverage",
-        "test:badges": "npm run test:coverage && jest-coverage-badges --output badges"
+        "test:badges": "npm run test:coverage && jest-coverage-badges-ng --output badges"
     },
     "keywords": [
         "mediatr",
@@ -31,7 +33,7 @@
         "eslint": "^8.21.0",
         "inversify": "^6.0.1",
         "jest": "^28.1.3",
-        "jest-coverage-badges": "^1.1.2",
+        "jest-coverage-badges-ng": "^1.0.1",
         "reflect-metadata": "^0.1.13",
         "rimraf": "^3.0.2",
         "ts-jest": "^28.0.7",
@@ -41,5 +43,13 @@
     },
     "files": [
         "lib/*"
-    ]
+    ],
+    "exports": {
+        ".": {
+            "types": "./lib/types/index.d.ts",
+            "require": "./lib/cjs/index.js",
+            "import": "./lib/esm/index.js",
+            "default": "./lib/esm/index.js"
+        }
+    }
 }
