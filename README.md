@@ -16,6 +16,7 @@ It work out-of-the-box with an internal resolver, however it can be 'plugged in'
 ## Supported concepts
 
 ### Request handlers
+
 Below the `requestHandler` pattern with internal resolver and with the inversify library
 
 ```typescript
@@ -46,6 +47,7 @@ const result = await mediator.send<string>(r);
 ```
 
 ### Notification handlers
+
 ```typescript
 import { Mediator } from "@mediatr-ts";
 
@@ -71,6 +73,7 @@ mediator.publish(new Ping(message));
 ```
 
 #### Changing the order of execution
+
 By default, the notification handlers will run in the order that they are loaded in. This might not be desirable, since it depends on the order of the imports. To change the order, you can set it explicitly.
 
 ```typescript
@@ -116,6 +119,7 @@ const mediator = new Mediator();
 ```
 
 ### Pipeline behaviors
+
 ```typescript
 class Request {
     name?: string;
@@ -170,6 +174,7 @@ const result = await mediator.send(r);
 ```
 
 #### Changing the order of execution
+
 By default, the pipeline behaviors will run in the order that they are loaded in. This might not be desirable, since it depends on the order of the imports. To change the order, you can set it explicitly.
 
 ```typescript
@@ -203,17 +208,18 @@ const mediator = new Mediator();
 ## Integrating with Dependency Injection containers
 
 ### Inversify
+
 At the very beginning of your app you **MUST** setup the resolver with Inversify, or at least **BEFORE** using the `@requestHandler` attribute and/or the `Mediator` class.
 
 ```typescript
 import { Container } from "inversify";
-import { mediatorSettings, Mediator } from "@mediatr-ts";
+import { mediatorSettings, Mediator, IResolver } from "@mediatr-ts";
 
 const container = new Container();
 
 // inversify.resolver.ts -> Implement the resolver
 class InversifyResolver implements IResolver {
-    resolve<T>(name: string): <T> {
+    resolve<T>(name: string): T {
         return container.get(name);
     }
 

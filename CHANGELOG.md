@@ -5,19 +5,21 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-
 ## [1.1.0] - 2023-05-13
 
 ### Added
+
 - Support for ES Modules. This mitigates the bailout on optimizations warnings whem importing CommonJs packages on Angular applications [More info](https://angular.io/guide/build#configuring-commonjs-dependencies)
 
 ## [1.0.0] - 2023-03-11
 
 ### Added
+
 - Added new pipeline behavior example to documentation.
 - Added new example of reordering execution order for both notifications and pipeline behaviors to documentation.
 
 ### Changed
+
 - Separated the documentation into "Core concepts", and then extracted the Dependency Injection part out as a separate section.
 - Added new types called `INotificationClass` and `INotificationHandlerClass`. These are used for *classes* instead of *instances* of these types. The code wrongly had `INotification` specified in cases where the actual real type was `INotificationClass`. This also strengthens the code and makes it harder to write it wrong.
 - The `publish` method on the `Mediator` now returns a `Promise<void>` instead of `Promise<void[]>`.
@@ -30,6 +32,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added `"strict": true` to the `tsconfig.json` file, so that we now have full TypeScript strictness in the project.
 
 ### Removed
+
 - Removed the order in the notification handler decorator.
 - Got rid of the `DispatcherInstance` class. Instead, we now have mapping classes (similar, but not entirely identical). See the rest of the notes.
 

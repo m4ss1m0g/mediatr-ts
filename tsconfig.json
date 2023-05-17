@@ -17,7 +17,8 @@
     "emitDecoratorMetadata": true,         /* Enables experimental support for emitting type metadata for decorators. */
     "skipLibCheck": true,                     /* Skip type checking of declaration files. */
     "forceConsistentCasingInFileNames": true,  /* Disallow inconsistently-cased references to the same file. */
-    "importsNotUsedAsValues": "error"
+    "importsNotUsedAsValues": "error",        /* deprecated on typescript 5.5 */
+    "ignoreDeprecations": "5.0"               /** remove this line when updating to Typescript 5.5 */
   },
   "exclude": ["node_modules", "lib/**/*.js"],
   "include": ["src/**/*.ts", "test/**/*.ts" ]
