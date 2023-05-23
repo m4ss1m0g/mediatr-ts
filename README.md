@@ -213,7 +213,7 @@ At the very beginning of your app you **MUST** setup the resolver with Inversify
 
 ```typescript
 import { Container } from "inversify";
-import { mediatorSettings, Mediator, IResolver } from "@mediatr-ts";
+import { mediatorSettings, Mediator, IResolver } from "mediatr-ts";
 
 const container = new Container();
 
