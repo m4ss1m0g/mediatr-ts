@@ -1,0 +1,19 @@
+{
+  "name": "cjs",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "build": "npx tsc -b tsconfig.json",
+    "start": "npm run build && node lib/index.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "mediatr-ts": "file:../../mediatr-ts-1.1.0.tgz"
+  },
+  "devDependencies": {
+    "typescript": "^5.0.4"
+  }
+}

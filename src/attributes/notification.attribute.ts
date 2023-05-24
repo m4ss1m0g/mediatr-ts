@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/ban-types */
-import type { INotificationClass } from "@/interfaces/inotification";
-import type { INotificationHandlerClass } from "@/interfaces/inotification.handler";
-import {mediatorSettings} from "@/index";
+import type { INotificationClass } from "@/interfaces/inotification.js";
+import type { INotificationHandlerClass } from "@/interfaces/inotification.handler.js";
+import {mediatorSettings} from "@/index.js";
 
 /**
  * Decorate the notificationHandler with this attribute

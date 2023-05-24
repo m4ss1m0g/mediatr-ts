@@ -1,8 +1,8 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import pipelineBehavior from "@/attributes/pipeline.behavior.attribute";
-import { Mediator, IRequestHandler, mediatorSettings, requestHandler, IRequest } from "@/index";
-import type IPipelineBehavior from "@/interfaces/ipipeline.behavior";
-import Resolver from "@/models/resolver";
+import pipelineBehavior from "@/attributes/pipeline.behavior.attribute.js";
+import { Mediator, IRequestHandler, mediatorSettings, requestHandler, IRequest } from "@/index.js";
+import type IPipelineBehavior from "@/interfaces/ipipeline.behavior.js";
+import Resolver from "@/models/resolver.js";
 
 describe("Resolver with local container", () => {
     beforeEach(() => {

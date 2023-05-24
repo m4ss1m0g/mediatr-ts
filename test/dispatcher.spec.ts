@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import type { INotification, INotificationHandler } from "@/index";
-import { mediatorSettings } from "@/index";
-import Dispatcher from "@/models/dispatcher";
+import type { INotification, INotificationHandler } from "@/index.js";
+import { mediatorSettings } from "@/index.js";
+import Dispatcher from "@/models/dispatcher/index.js";
 
 describe("The internal dispatcher", () => {
     class Ping implements INotification {

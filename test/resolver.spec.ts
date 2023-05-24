@@ -1,5 +1,5 @@
-import Resolver from "../src/models/resolver";
-import { mediatorSettings } from "@/index";
+import Resolver from "@/models/resolver.js";
+import { mediatorSettings } from "@/index.js";
 
 /**
  * the anonymous function is required because expect(x).toThrow()

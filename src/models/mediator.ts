@@ -1,12 +1,12 @@
 /* eslint-disable @typescript-eslint/ban-types */
-import type { IRequestHandler } from "@/index";
-import type IMediator from "@/interfaces/imediator";
-import type INotification from "@/interfaces/inotification";
-import type { INotificationClass } from "@/interfaces/inotification";
-import type INotificationHandler from "@/interfaces/inotification.handler";
-import type IRequest from "@/interfaces/irequest";
-import {mediatorSettings} from "@/index";
-import type IPipelineBehavior from "@/interfaces/ipipeline.behavior";
+import type { IRequestHandler } from "@/index.js";
+import type IMediator from "@/interfaces/imediator.js";
+import type INotification from "@/interfaces/inotification.js";
+import type { INotificationClass } from "@/interfaces/inotification.js";
+import type INotificationHandler from "@/interfaces/inotification.handler.js";
+import type IRequest from "@/interfaces/irequest.js";
+import {mediatorSettings} from "@/index.js";
+import type IPipelineBehavior from "@/interfaces/ipipeline.behavior.js";
 
 /**
  * The mediator class
