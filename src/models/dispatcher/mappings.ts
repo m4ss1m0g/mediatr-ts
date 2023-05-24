@@ -68,10 +68,10 @@ export class BehaviorMappings extends OrderMappings<PipelineBehaviorData> {
         mediatorSettings.resolver.add(handlerName, mapping.behavior);
     }
 
-    public setOrder<TNotification extends INotificationClass>(behaviors: INotificationHandlerClass<TNotification>[]) {
+    public setOrder(behaviors: IPipelineBehaviorClass[]) {
         const all = this.getAll();
         for(const handler of all) {
-            handler.order = behaviors.indexOf(handler.behavior as INotificationHandlerClass<TNotification>);
+            handler.order = behaviors.indexOf(handler.behavior as IPipelineBehaviorClass);
         }
     }
 

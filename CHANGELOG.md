@@ -7,11 +7,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [2.0.0] - 2023-05-24
 
+### Added
+
+- Add cjs and esm examples
+
 ### Changes
 
 - Update to Typescript V5
 - Fix CJS / ESM module support
-- Add cjs and esm examples
+- Fix behaviour `setOrder` method
 
 ## [1.1.0] - 2023-05-13
 
