@@ -1,9 +1,9 @@
 /* eslint-disable @typescript-eslint/ban-types */
-import type { OrderMapping } from "@/interfaces/idispatcher";
-import type { INotificationClass } from "@/interfaces/inotification";
-import type { INotificationHandlerClass } from "@/interfaces/inotification.handler";
-import { INotification, mediatorSettings } from "@/index";
-import type { IPipelineBehaviorClass } from "@/interfaces/ipipeline.behavior";
+import type { OrderMapping } from "@/interfaces/idispatcher.js";
+import type { INotificationClass } from "@/interfaces/inotification.js";
+import type { INotificationHandlerClass } from "@/interfaces/inotification.handler.js";
+import { INotification, mediatorSettings } from "@/index.js";
+import type { IPipelineBehaviorClass } from "@/interfaces/ipipeline.behavior.js";
 
 export abstract class OrderMappings<TData = {}> {
     // Contains the mapping of the event with the handler name
@@ -68,10 +68,10 @@ export class BehaviorMappings extends OrderMappings<PipelineBehaviorData> {
         mediatorSettings.resolver.add(handlerName, mapping.behavior);
     }
 
-    public setOrder<TNotification extends INotificationClass>(behaviors: INotificationHandlerClass<TNotification>[]) {
+    public setOrder(behaviors: IPipelineBehaviorClass[]) {
         const all = this.getAll();
         for(const handler of all) {
-            handler.order = behaviors.indexOf(handler.behavior as INotificationHandlerClass<TNotification>);
+            handler.order = behaviors.indexOf(handler.behavior as IPipelineBehaviorClass);
         }
     }
 

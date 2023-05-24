@@ -1,5 +1,5 @@
-import { Mediator, IRequestHandler, mediatorSettings, requestHandler } from "@/index";
-import Resolver from "@/models/resolver";
+import { Mediator, IRequestHandler, mediatorSettings, requestHandler } from "@/index.js";
+import Resolver from "@/models/resolver.js";
 
 describe("Resolver with local container", () => {
     beforeEach(() => {

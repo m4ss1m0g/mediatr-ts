@@ -1,7 +1,7 @@
-import type IDispatcher from "@/interfaces/idispatcher";
-import type IResolver from "@/interfaces/iresolver";
-import Dispatcher from "@/models/dispatcher";
-import Resolver from "@/models/resolver";
+import type IDispatcher from "@/interfaces/idispatcher.js";
+import type IResolver from "@/interfaces/iresolver.js";
+import Dispatcher from "@/models/dispatcher/index.js";
+import Resolver from "@/models/resolver.js";
 
 /**
  * Contains the settings for the MediatR lib

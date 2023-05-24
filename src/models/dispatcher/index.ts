@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/ban-types */
 
-import type IDispatcher from "@/interfaces/idispatcher";
-import { BehaviorMappings, NotificationMappings } from "./mappings";
+import type IDispatcher from "@/interfaces/idispatcher.js";
+import { BehaviorMappings, NotificationMappings } from "@/models/dispatcher/mappings.js";
 
 /**
  * The internal dispatcher

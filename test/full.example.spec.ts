@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/ban-types */
 import "reflect-metadata";
 import { Container, inject, injectable } from "inversify";
-import { mediatorSettings, Mediator, IResolver, IRequest, requestHandler, IRequestHandler } from "@/index";
+import { mediatorSettings, Mediator, IResolver, IRequest, requestHandler, IRequestHandler } from "@/index.js";
 
 
 describe("The full example", () => {

@@ -49,7 +49,7 @@ const result = await mediator.send<string>(r);
 ### Notification handlers
 
 ```typescript
-import { Mediator } from "@mediatr-ts";
+import { Mediator } from "mediatr-ts";
 
 const result: string[] = [];
 
@@ -77,7 +77,7 @@ mediator.publish(new Ping(message));
 By default, the notification handlers will run in the order that they are loaded in. This might not be desirable, since it depends on the order of the imports. To change the order, you can set it explicitly.
 
 ```typescript
-import { mediatorSettings, Mediator } from "@mediatr-ts";
+import { mediatorSettings, Mediator } from "mediatr-ts";
 
 const result: string[] = [];
 
@@ -178,7 +178,7 @@ const result = await mediator.send(r);
 By default, the pipeline behaviors will run in the order that they are loaded in. This might not be desirable, since it depends on the order of the imports. To change the order, you can set it explicitly.
 
 ```typescript
-import { mediatorSettings, Mediator } from "@mediatr-ts";
+import { mediatorSettings, Mediator } from "mediatr-ts";
 
 @pipelineBehavior()
 class PipelineBehaviorTest1 implements IPipelineBehavior {

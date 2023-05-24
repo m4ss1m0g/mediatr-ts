@@ -1,8 +1,8 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import type INotification from "@/interfaces/inotification";
-import notificationHandler from "@/attributes/notification.attribute";
-import type INotificationHandler from "@/interfaces/inotification.handler";
-import { Mediator, mediatorSettings } from "@/index";
+import type INotification from "@/interfaces/inotification.js";
+import notificationHandler from "@/attributes/notification.attribute.js";
+import type INotificationHandler from "@/interfaces/inotification.handler.js";
+import { Mediator, mediatorSettings } from "@/index.js";
 
 describe("The notification attribute", () => {
     class Ping implements INotification {

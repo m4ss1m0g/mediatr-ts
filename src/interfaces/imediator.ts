@@ -1,5 +1,5 @@
-import type INotification from "@/interfaces/inotification";
-import type IRequest from "./irequest";
+import type INotification from "@/interfaces/inotification.js";
+import type IRequest from "@/interfaces/irequest.js";
 
 /**
  * The mediator interface

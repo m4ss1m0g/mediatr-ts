@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/ban-types */
 
-import type { BehaviorMappings, NotificationMappings } from "@/models/dispatcher/mappings";
+import type { BehaviorMappings, NotificationMappings } from "@/models/dispatcher/mappings.js";
 
 export type OrderMapping<TData = {}> = TData & {
     order?: number;

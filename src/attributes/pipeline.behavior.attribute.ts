@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/ban-types */
 
-import {mediatorSettings} from "@/index";
-import type { IPipelineBehaviorClass } from "@/interfaces/ipipeline.behavior";
+import {mediatorSettings} from "@/index.js";
+import type { IPipelineBehaviorClass } from "@/interfaces/ipipeline.behavior.js";
 
 /**
  * Decorate the pipelineBehavior with this attribute

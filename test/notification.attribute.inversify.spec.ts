@@ -9,7 +9,7 @@ import {
     INotification,
     notificationHandler,
     INotificationHandler,
-} from "@/index";
+} from "@/index.js";
 import { injectable, Container, inject } from "inversify";
 
 describe("Notification with inversify", () => {

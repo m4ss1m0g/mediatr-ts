@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/ban-types */
-import type { IRequestClass } from "@/interfaces/irequest";
-import {mediatorSettings} from "@/index";
+import type { IRequestClass } from "@/interfaces/irequest.js";
+import {mediatorSettings} from "@/index.js";
 
 /**
  * Decorate the requestHandler with this attribute

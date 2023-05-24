@@ -1,0 +1,22 @@
+{
+  "name": "cjs",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "clean": "npx rimraf lib",
+    "reinstall": "npm run clean && npx rimraf node_modules && npm install",
+    "build": "npx tsc -b tsconfig.json",
+    "start": "npm run build && node lib/index.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "mediatr-ts": "file:../../mediatr-ts-1.2.0.tgz"
+  },
+  "devDependencies": {
+    "typescript": "^5.0.4",
+    "rimraf": "^5.0.1"
+  }
+}

@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/ban-types */
-import type IResolver from "@/interfaces/iresolver";
-import HandlerInstance from "@/models/handler.instance";
+import type IResolver from "@/interfaces/iresolver.js";
+import HandlerInstance from "@/models/handler.instance.js";
 
 
 /**
