@@ -13,23 +13,23 @@ import type IResolver from "@/interfaces/iresolver.js";
 
 import type IMediator from "@/interfaces/imediator.js";
 import Mediator from "@/models/mediator.js";
+import IPipelineBehavior from "@/interfaces/ipipeline.behavior.js";
+import pipelineBehavior from "@/attributes/pipeline.behavior.attribute.js";
 
 export {
     IRequest,
     IRequestHandler,
     requestHandler,
-
     INotification,
     notificationHandler,
     INotificationHandler,
-
     IDispatcher,
-    
     IResolver,
-
     IMediator,
     Mediator,
     mediatorSettings,
+    IPipelineBehavior,
+    pipelineBehavior
 };
 
 /**
