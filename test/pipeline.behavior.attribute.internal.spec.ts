@@ -1,7 +1,13 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import pipelineBehavior from "@/attributes/pipeline.behavior.attribute.js";
-import { Mediator, IRequestHandler, mediatorSettings, requestHandler, IRequest } from "@/index.js";
-import type IPipelineBehavior from "@/interfaces/ipipeline.behavior.js";
+import {
+    type IPipelineBehavior,
+    Mediator,
+    IRequestHandler,
+    mediatorSettings,
+    requestHandler,
+    IRequest,
+    pipelineBehavior,
+} from "@/index.js";
 import Resolver from "@/models/resolver.js";
 
 describe("Resolver with local container", () => {
@@ -29,12 +35,12 @@ describe("Resolver with local container", () => {
         @pipelineBehavior()
         class PipelineBehaviorTest implements IPipelineBehavior {
             async handle(request: IRequest<unknown>, next: () => unknown): Promise<unknown> {
-                if(request instanceof Request) {
+                if (request instanceof Request) {
                     request.name += " with stuff";
                 }
 
                 let result = await next();
-                if(typeof result === "string") {
+                if (typeof result === "string") {
                     result += " after";
                 }
 
@@ -72,12 +78,12 @@ describe("Resolver with local container", () => {
         @pipelineBehavior()
         class PipelineBehaviorTest1 implements IPipelineBehavior {
             async handle(request: IRequest<unknown>, next: () => unknown): Promise<unknown> {
-                if(request instanceof Request) {
+                if (request instanceof Request) {
                     request.name += " with stuff 1";
                 }
 
                 let result = await next();
-                if(typeof result === "string") {
+                if (typeof result === "string") {
                     result += " after 1";
                 }
 
@@ -88,12 +94,12 @@ describe("Resolver with local container", () => {
         @pipelineBehavior()
         class PipelineBehaviorTest2 implements IPipelineBehavior {
             async handle(request: IRequest<unknown>, next: () => unknown): Promise<unknown> {
-                if(request instanceof Request) {
+                if (request instanceof Request) {
                     request.name += " with stuff 2";
                 }
 
                 let result = await next();
-                if(typeof result === "string") {
+                if (typeof result === "string") {
                     result += " after 2";
                 }
 

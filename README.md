@@ -285,3 +285,7 @@ const result = await mediator.send<string>(new Request(99));
 
 // result => "We has 99 ninja fight"
 ```
+
+## Examples
+
+You can find some basic examples on the `src/examples` folder
