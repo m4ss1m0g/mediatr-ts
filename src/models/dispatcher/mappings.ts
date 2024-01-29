@@ -15,12 +15,19 @@ export abstract class OrderMappings<TData = {}> {
 
     protected abstract onAdded(mapping: OrderMapping<TData>): void;
 
+    /**
+     * Adds a new mapping to the list of mappings. If the order of the mapping is not
+     * specified, it is set to the end of the list.
+     *
+     * @param {OrderMapping<TData>} mapping - the mapping to be added
+     * @return {void}
+     */
     public add(mapping: OrderMapping<TData>): void {
-        if(mapping.order !== 0) {
+        if (mapping.order !== 0) {
             mapping.order = this._mappings.length;
         }
         this._mappings.push(mapping);
-        
+
         this.onAdded(mapping);
     }
 
@@ -33,44 +40,63 @@ function byOrder<TIdentifier>(a: OrderMapping<TIdentifier>, b: OrderMapping<TIde
     return (b.order || 0) - (a.order || 0);
 }
 
-type NotificationMappingData = { 
-    handler: INotificationHandlerClass<unknown>,
-    notification: INotification
+/**
+ * Notifications mappings
+ */
+
+type NotificationMappingData = {
+    handler: INotificationHandlerClass<unknown>;
+    notification: INotification;
 };
 export class NotificationMappings extends OrderMappings<NotificationMappingData> {
     protected onAdded(mapping: OrderMapping<NotificationMappingData>): void {
-        const handlerName = mapping.handler.prototype.constructor.name;
+        const uniqueId = mapping.uniqueId;
+        const handlerName = uniqueId ?? mapping.handler.prototype.constructor.name;
         mediatorSettings.resolver.add(handlerName, mapping.handler);
     }
 
-    public setOrder<TNotification extends INotificationClass>(notification: INotificationClass, handlers: INotificationHandlerClass<TNotification>[]) {
+    public setOrder<TNotification extends INotificationClass>(
+        notification: INotificationClass,
+        handlers: INotificationHandlerClass<TNotification>[]
+    ) {
         const all = this.getAll(notification);
-        for(const handler of all) {
-            handler.order = handlers.indexOf(handler.handler as INotificationHandlerClass<TNotification>);
+        for (const handler of all) {
+            handler.order = handlers.indexOf(
+                handler.handler as INotificationHandlerClass<TNotification>
+            );
         }
     }
 
     public getAll(notification: INotificationClass): OrderMapping<NotificationMappingData>[] {
         const items = this._mappings.filter((p) => p.notification === notification);
         if (items.length === 0)
-            throw new Error(`Cannot find notification handler with key: ${(notification as unknown as Function).prototype.name}`);
+            throw new Error(
+                `Cannot find notification handler with key: ${
+                    (notification as unknown as Function).prototype.name
+                }`
+            );
 
         return items.sort(byOrder);
     }
 }
 
+/**
+ * Behaviors
+ */
+
 type PipelineBehaviorData = {
-    behavior: IPipelineBehaviorClass
+    behavior: IPipelineBehaviorClass;
 };
 export class BehaviorMappings extends OrderMappings<PipelineBehaviorData> {
     protected onAdded(mapping: OrderMapping<PipelineBehaviorData>): void {
-        const handlerName = mapping.behavior.prototype.constructor.name;
+        const uniqueId = mapping.uniqueId;
+        const handlerName = uniqueId ?? mapping.behavior.prototype.constructor.name;
         mediatorSettings.resolver.add(handlerName, mapping.behavior);
     }
 
     public setOrder(behaviors: IPipelineBehaviorClass[]) {
         const all = this.getAll();
-        for(const handler of all) {
+        for (const handler of all) {
             handler.order = behaviors.indexOf(handler.behavior as IPipelineBehaviorClass);
         }
     }

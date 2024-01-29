@@ -107,7 +107,7 @@ mediator.publish(new Ping(message));
 
 // result: [ "Foo" ]
 
-// Set the order of the pipeline behaviors. PipelineBehaviorTest2 will be executed first, and then PipelineBehaviorTest1.
+// Set the order of the pipeline behaviors. Pong2 will be executed first, and then Pong1.
 mediatorSettings.dispatcher.notifications.setOrder(Ping, [
     Pong2, 
     Pong1
@@ -286,6 +286,59 @@ const result = await mediator.send<string>(new Request(99));
 // result => "We has 99 ninja fight"
 ```
 
+## Edge cases
+
+### Class with custom id
+
+Sometimes when minifing source code can be classes with same name, for this issue you can specify a `customId` for the specified class
+
+Below the `requestHandler` pattern with internal resolver, custom id `MyUniqueId` for class identifier and with the inversify library
+
+```typescript
+// request.ts -> Define the request
+class Request implements IRequest<string> {
+    name: string;
+    uniqueId: "MyUniqueId"; // this must be equal to the value passed on the requestHandler
+}
+
+// handlertest.ts -> Add the attribute to the request handler
+@requestHandler(Request, "MyUniqueId")
+class HandlerTest implements IRequestHandler<Request, string> {
+    handle(value: Request): Promise<string> {
+        return Promise.resolve(`Value passed ${value.name}`);
+    }
+}
+
+// main.ts -> Instantiate the mediator 
+const mediator = new Mediator();
+
+// Create the request
+const r = new Request();
+r.name = "Foo";
+
+// Send the command
+const result = await mediator.send<string>(r);
+
+// result = "Value passed Foo"
+```
+
+### Notifications
+
+The behaviour of the `uniqueId` on `requestHandler` exists on `notificationHandler`, below the code
+
+``` typescript
+    @notificationHandler(Ping, "MyPong1")
+    class Pong1 implements INotificationHandler<Ping> {
+
+        async handle(notification: Ping): Promise<void> {
+            result.push(notification.value);
+        }
+    }
+```
+
+This code link the instance of `Pong1` with name `MyPong1`
+
 ## Examples
 
 You can find some basic examples on the `src/examples` folder
+Check also the `test` folder for more examples.

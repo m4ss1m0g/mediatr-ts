@@ -9,11 +9,12 @@ import {mediatorSettings} from "@/index.js";
  * @param value The request type
  * @param order The order of event
  */
-const notificationHandler = (value: INotificationClass) => {
+const notificationHandler = (value: INotificationClass, uniqueId?: string) => {
     return (target: Function): void => {
         mediatorSettings.dispatcher.notifications.add({
             notification: value,
-            handler: target as INotificationHandlerClass<unknown>
+            handler: target as INotificationHandlerClass<unknown>,
+            uniqueId
         });
     };
 };

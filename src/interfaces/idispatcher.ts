@@ -4,6 +4,7 @@ import type { BehaviorMappings, NotificationMappings } from "@/models/dispatcher
 
 export type OrderMapping<TData = {}> = TData & {
     order?: number;
+    uniqueId?: string;
 }
 
 /**
