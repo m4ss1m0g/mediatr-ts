@@ -1,22 +1,30 @@
-import { Mediator, IRequestHandler, mediatorSettings, requestHandler } from "@/index.js";
+import "reflect-metadata";
+import {
+    Mediator,
+    RequestHandler,
+    requestHandler,
+} from "@/index.js";
 import Resolver from "@/models/resolver.js";
+import RequestBase from "@/models/request.js";
+import Dispatcher from "@/models/dispatcher/index.js";
 
 describe("Resolver with local container", () => {
     beforeEach(() => {
-        mediatorSettings.resolver.clear();
+        Resolver.instance = new Resolver();
+        Dispatcher.instance = new Dispatcher(Resolver.instance);
     });
 
     test("Should resolve existing instance", async () => {
         // Arrange
-        mediatorSettings.resolver = new Resolver();
+        Resolver.instance = new Resolver();
 
-        class Request {
+        class Request extends RequestBase<string> {
             name?: string;
         }
 
         @requestHandler(Request)
         // eslint-disable-next-line @typescript-eslint/no-unused-vars
-        class HandlerTest implements IRequestHandler<Request, string> {
+        class HandlerTest implements RequestHandler<Request, string> {
             handle(value: Request): Promise<string> {
                 return Promise.resolve(`Value passed ${value.name}`);
             }
@@ -35,18 +43,18 @@ describe("Resolver with local container", () => {
 
     test("Should add the instance to the container when adding attribute to a class", () => {
         // Arrange
-        mediatorSettings.resolver = new Resolver();
+        Resolver.instance = new Resolver();
 
         // Add the spy
-        const add = jest.spyOn(mediatorSettings.resolver, "add");
+        const add = jest.spyOn(Resolver.instance, "add");
 
-        class Request {
+        class Request extends RequestBase<string> {
             name?: string;
         }
 
         @requestHandler(Request)
         // eslint-disable-next-line @typescript-eslint/no-unused-vars
-        class HandlerTest implements IRequestHandler<Request, string> {
+        class HandlerTest implements RequestHandler<Request, string> {
             handle(value: Request): Promise<string> {
                 return Promise.resolve(`Value passed ${value.name}`);
             }
@@ -58,15 +66,15 @@ describe("Resolver with local container", () => {
 
     test("Should throw duplicate key when adding attribute with same class the resolver", () => {
         // Arrange
-        mediatorSettings.resolver = new Resolver();
+        Resolver.instance = new Resolver();
 
-        class Request {
+        class Request extends RequestBase<string> {
             name?: string;
         }
 
         @requestHandler(Request)
         // eslint-disable-next-line @typescript-eslint/no-unused-vars
-        class HandlerTest implements IRequestHandler<Request, string> {
+        class HandlerTest implements RequestHandler<Request, string> {
             handle(value: Request): Promise<string> {
                 return Promise.resolve(`Value passed ${value.name}`);
             }
@@ -75,7 +83,7 @@ describe("Resolver with local container", () => {
         const fx = () => {
             @requestHandler(Request)
             // eslint-disable-next-line @typescript-eslint/no-unused-vars
-            class HandlerTest implements IRequestHandler<Request, string> {
+            class HandlerTest implements RequestHandler<Request, string> {
                 handle(value: Request): Promise<string> {
                     return Promise.resolve(`Value passed ${value.name}`);
                 }
@@ -88,7 +96,7 @@ describe("Resolver with local container", () => {
     test("Should throw 'cannot find element with key' when instance not found on container", async () => {
         const m = new Mediator();
         const fx = async () => {
-            await m.send<string>("foo");
+            await m.send<string>("foo" as any);
         };
 
         await expect(fx()).rejects.toThrowError();

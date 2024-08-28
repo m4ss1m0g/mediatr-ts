@@ -4,18 +4,19 @@
 import "reflect-metadata";
 import {
     Mediator,
-    IResolver,
-    mediatorSettings,
-    INotification,
+    NotificationHandler,
     notificationHandler,
-    INotificationHandler,
 } from "@/index.js";
 import { injectable, Container, inject } from "inversify";
+import { default as ResolverInterface } from "@/interfaces/iresolver"
+import Resolver from "@/models/resolver.js";
+import Dispatcher from "@/models/dispatcher/index.js";
+import NotificationBase from "@/models/notification.js";
 
 describe("Notification with inversify", () => {
     beforeEach(() => {
-        mediatorSettings.resolver.clear();
-        mediatorSettings.dispatcher.notifications.clear();
+        Resolver.instance = new Resolver();
+        Dispatcher.instance = new Dispatcher(Resolver.instance);
     });
 
     test("Should resolve the notification and inject inversify interfaces", async () => {
@@ -36,39 +37,40 @@ describe("Notification with inversify", () => {
             }
         }
 
-        const c = new Container();
-        c.bind<IWarrior>(TYPES.IWarrior).to(Ninja);
+        const container = new Container();
+        container.bind<IWarrior>(TYPES.IWarrior).to(Ninja);
 
-        class Ping implements INotification {
+        class Ping extends NotificationBase {
             public thenumber: number;
 
             constructor(thenumber: number) {
+                super();
                 this.thenumber = thenumber;
             }
         }
 
-        class InversifyResolver implements IResolver {
+        class InversifyResolver implements ResolverInterface {
             remove(name: string): void {
-                c.unbind(name);
+                container.unbind(name);
             }
             clear(): void {
-                c.unbindAll();
+                container.unbindAll();
             }
             resolve<T>(name: string): T {
-                const fx: any = c.get(name);
+                const fx: any = container.get(name);
                 return fx;
             }
             add(name: string, instance: Function): void {
-                c.bind(name).to(instance as any);
+                container.bind(name).to(instance as any);
             }
         }
 
-        // Settings the resolver with Inversify
-        mediatorSettings.resolver = new InversifyResolver();
+        Resolver.instance = new InversifyResolver();
+        Dispatcher.instance = new Dispatcher(Resolver.instance);
 
         @notificationHandler(Ping)
         @injectable()
-        class Foo implements INotificationHandler<Ping> {
+        class Foo implements NotificationHandler<Ping> {
             @inject(TYPES.IWarrior)
             public warrior?: IWarrior;
 

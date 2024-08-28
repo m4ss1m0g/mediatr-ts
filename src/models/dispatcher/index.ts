@@ -1,7 +1,13 @@
 /* eslint-disable @typescript-eslint/ban-types */
 
-import type IDispatcher from "@/interfaces/idispatcher.js";
+import type { default as DispatcherInterface } from "@/interfaces/idispatcher.js";
+import Resolver from "@/interfaces/iresolver";
+import ResolverImplementation from "@/models/resolver.js"
 import { BehaviorMappings, NotificationMappings } from "@/models/dispatcher/mappings.js";
+
+export type OrderMapping<TData = {}> = TData & {
+    order?: number;
+}
 
 /**
  * The internal dispatcher
@@ -9,15 +15,34 @@ import { BehaviorMappings, NotificationMappings } from "@/models/dispatcher/mapp
  * 
  * @export
  * @class Dispatcher
- * @implements {IDispatcher}
+ * @implements {Dispatcher}
  */
-export default class Dispatcher implements IDispatcher {
+export default class Dispatcher implements DispatcherInterface {
+    private static _instance: DispatcherInterface | undefined;
+
     private readonly _notifications: NotificationMappings;
     private readonly _behaviors: BehaviorMappings;
 
-    constructor() {
-        this._notifications = new NotificationMappings();
-        this._behaviors = new BehaviorMappings();
+    public static get instance() {
+        if(this._instance) {
+            return this._instance;
+        }
+
+        const instance = new Dispatcher(ResolverImplementation.instance);
+        this._instance = instance;
+
+        return instance;
+    }
+
+    public static set instance(value: DispatcherInterface) {
+        this._instance = value;
+    }
+
+    public constructor(
+        resolver: Resolver,
+    ) {
+        this._notifications = new NotificationMappings(resolver);
+        this._behaviors = new BehaviorMappings(resolver);
     }
 
     get notifications() {

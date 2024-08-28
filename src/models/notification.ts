@@ -1,15 +1,15 @@
+const marker = Symbol();
+
 /**
- *  The request interface
+ * The Notification interface
  *
  * @export
  * @interface IRequest
  * @template T
  */
 // eslint-disable-next-line @typescript-eslint/no-empty-interface,  @typescript-eslint/no-unused-vars
-export default interface IRequest<T> {
-    // eslint-disable-next-line @typescript-eslint/ban-types
-    constructor: Function;
+export default class NotificationBase {
 }
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-export type IRequestClass<T> = new (...args: any[]) => IRequest<T>;
+export type NotificationClass = new (...args: any[]) => NotificationBase;

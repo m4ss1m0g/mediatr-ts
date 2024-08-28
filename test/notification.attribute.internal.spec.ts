@@ -1,27 +1,29 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import type INotification from "@/interfaces/inotification.js";
+import type Notification from "@/models/notification.js";
 import notificationHandler from "@/attributes/notification.attribute.js";
-import type INotificationHandler from "@/interfaces/inotification.handler.js";
-import { Mediator, mediatorSettings } from "@/index.js";
+import type NotificationHandler from "@/interfaces/inotification.handler.js";
+import { Mediator } from "@/index.js";
+import Resolver from "@/models/resolver.js";
+import Dispatcher from "@/models/dispatcher/index.js";
 
 describe("The notification attribute", () => {
-    class Ping implements INotification {
+    class Ping implements Notification {
         constructor(public value: string){}
     }
 
     beforeEach(()=>{
-        mediatorSettings.resolver.clear();
-        mediatorSettings.dispatcher.notifications.clear();
+        Resolver.instance = new Resolver();
+        Dispatcher.instance = new Dispatcher(Resolver.instance);
     });
 
     test("Should add instance to dispatcher and resolver", () => {
         // Arrange
-        const spyDispatcher = jest.spyOn(mediatorSettings.dispatcher.notifications, "add");
-        const spyResolver = jest.spyOn(mediatorSettings.resolver, "add");
+        const spyDispatcher = jest.spyOn(Dispatcher.instance.notifications, "add");
+        const spyResolver = jest.spyOn(Resolver.instance, "add");
 
         // Act
         @notificationHandler(Ping)
-        class Pong1 implements INotificationHandler<Ping> {
+        class Pong1 implements NotificationHandler<Ping> {
             handle(notification: Ping): Promise<void> {
                 throw new Error("Method not implemented.");
             }
@@ -40,7 +42,7 @@ describe("The notification attribute", () => {
         const message = "foo";
 
         @notificationHandler(Ping)
-        class Pong1 implements INotificationHandler<Ping> {
+        class Pong1 implements NotificationHandler<Ping> {
 
             async handle(notification: Ping): Promise<void> {
                 result.push(notification.value);
@@ -61,22 +63,22 @@ describe("The notification attribute", () => {
         const result: string[] = [];
         const message1 = "foo1";
 
-        class Pong2 implements INotificationHandler<Ping> {
+        class Pong2 implements NotificationHandler<Ping> {
 
             async handle(notification: Ping): Promise<void> {
                 result.push(notification.value + "_2");
             }
         }
 
-        class Pong1 implements INotificationHandler<Ping> {
+        class Pong1 implements NotificationHandler<Ping> {
 
             async handle(notification: Ping): Promise<void> {
                 result.push(notification.value + "_1");
             }
         }
 
-        mediatorSettings.dispatcher.notifications.add({ notification: Ping, handler: Pong2, order: 2 });
-        mediatorSettings.dispatcher.notifications.add({ notification: Ping, handler: Pong1, order: 1 });
+        Dispatcher.instance.notifications.add({ notification: Ping, handler: Pong2, order: 2 });
+        Dispatcher.instance.notifications.add({ notification: Ping, handler: Pong1, order: 1 });
         
         // Act
         const mediator = new Mediator();
@@ -94,7 +96,7 @@ describe("The notification attribute", () => {
         const message = "foo";
 
         @notificationHandler(Ping)
-        class Pong1 implements INotificationHandler<Ping> {
+        class Pong1 implements NotificationHandler<Ping> {
 
             async handle(notification: Ping): Promise<void> {
                 result.push(notification.value);
@@ -102,7 +104,7 @@ describe("The notification attribute", () => {
         }
 
         @notificationHandler(Ping)
-        class Pong2 implements INotificationHandler<Ping> {
+        class Pong2 implements NotificationHandler<Ping> {
 
             async handle(notification: Ping): Promise<void> {
                 result.push(notification.value);

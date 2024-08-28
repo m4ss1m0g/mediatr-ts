@@ -1,12 +1,15 @@
 /* eslint-disable @typescript-eslint/ban-types */
-import type { IRequestHandler } from "@/index.js";
-import type IMediator from "@/interfaces/imediator.js";
-import type INotification from "@/interfaces/inotification.js";
-import type { INotificationClass } from "@/interfaces/inotification.js";
-import type INotificationHandler from "@/interfaces/inotification.handler.js";
-import type IRequest from "@/interfaces/irequest.js";
-import {mediatorSettings} from "@/index.js";
-import type IPipelineBehavior from "@/interfaces/ipipeline.behavior.js";
+import type { default as MediatorInterface } from "@/interfaces/imediator.js";
+import type Notification from "@/models/notification.js";
+import type { NotificationClass } from "@/models/notification.js";
+import type NotificationHandler from "@/interfaces/inotification.handler.js";
+import type RequestBase from "@/models/request.js";
+import type PipelineBehavior from "@/interfaces/ipipeline.behavior.js";
+import Dispatcher from "@/interfaces/idispatcher";
+import Resolver from "@/interfaces/iresolver";
+import RequestHandler from "@/interfaces/irequest.handler";
+import { default as DispatcherImplementation } from "./dispatcher";
+import { default as ResolverImplementation } from "./resolver";
 
 /**
  * The mediator class
@@ -14,32 +17,43 @@ import type IPipelineBehavior from "@/interfaces/ipipeline.behavior.js";
  *
  * @export
  * @class Mediator
- * @implements {IMediator}
+ * @implements {Mediator}
  */
-export default class Mediator implements IMediator {
+export default class Mediator implements MediatorInterface {
+    private readonly _dispatcher: Dispatcher;
+    private readonly _resolver: Resolver;
+
+    public constructor(
+        dispatcher?: Dispatcher,
+        resolver?: Resolver
+    ) {
+        this._dispatcher = dispatcher || DispatcherImplementation.instance;
+        this._resolver = resolver || ResolverImplementation.instance;
+    }
+    
     /**
      * Send a request to the mediator
      *
      * @template T
-     * @param {IRequest<T>} request The request to send
+     * @param {RequestBase<T>} request The request to send
      * @returns {Promise<T>}
      * @memberof Mediator
      */
-    public async send<T>(request: IRequest<T>): Promise<T> {
+    public async send<TResult>(request: RequestBase<TResult>): Promise<TResult> {
         const name = request.constructor.name;
 
-        const handler = mediatorSettings.resolver.resolve<IRequestHandler<IRequest<T>, T>>(name);
-        const behaviors = mediatorSettings.dispatcher.behaviors
+        const handler = this._resolver.resolve<RequestHandler<RequestBase<TResult>, TResult>>(name);
+        const behaviors = this._dispatcher.behaviors
             .getAll()
             .map(p => p.behavior);
         
         let currentBehaviorIndex = 0;
-        const next = async (): Promise<T> => {
+        const next = async (): Promise<TResult> => {
             if(currentBehaviorIndex < behaviors.length) {
                 const behaviorClass = behaviors[currentBehaviorIndex];
-                const behavior = mediatorSettings.resolver.resolve<IPipelineBehavior>((behaviorClass as unknown as Function).name);
+                const behavior = this._resolver.resolve<PipelineBehavior>((behaviorClass as unknown as Function).name);
                 currentBehaviorIndex++;
-                return await behavior.handle(request, next) as Promise<T>;
+                return await behavior.handle(request, next) as Promise<TResult>;
             }
             else {
                 return await handler.handle(request);
@@ -52,15 +66,15 @@ export default class Mediator implements IMediator {
     /**
      * Publish a new message
      *
-     * @param {INotification} message The message to publish
+     * @param {Notification} message The message to publish
      * @returns {Promise<void>}
      * @memberof Mediator
      */
-    public async publish(message: INotification): Promise<void> {
-        const events = mediatorSettings.dispatcher.notifications.getAll(message.constructor as INotificationClass);
+    public async publish(message: Notification): Promise<void> {
+        const events = this._dispatcher.notifications.getAll(message.constructor as NotificationClass);
 
         await Promise.all(events.map(async (p) => {
-            const handler = mediatorSettings.resolver.resolve<INotificationHandler<INotification>>((p.handler as unknown as Function).name);
+            const handler = this._resolver.resolve<NotificationHandler<Notification>>((p.handler as unknown as Function).name);
             return handler.handle(message);
         }));
     }

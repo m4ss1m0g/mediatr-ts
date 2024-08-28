@@ -1,34 +1,29 @@
-import mediatorSettings from "@/settings.js";
-
-import type IRequest from "@/interfaces/irequest.js";
-import type IRequestHandler from "@/interfaces/irequest.handler.js";
+import RequestBase from "@/models/request.js";
+import RequestHandler from "@/interfaces/irequest.handler.js";
 import requestHandler from "@/attributes/request.attribute.js";
 
-import type INotification from "@/interfaces/inotification.js";
-import type INotificationHandler from "@/interfaces/inotification.handler.js";
+import type Notification from "@/models/notification.js";
+import type NotificationHandler from "@/interfaces/inotification.handler.js";
 import notificationHandler from "@/attributes/notification.attribute.js";
 
-import type IDispatcher from "@/interfaces/idispatcher.js";
-import type IResolver from "@/interfaces/iresolver.js";
+import type Dispatcher from "@/interfaces/idispatcher.js";
+import type Resolver from "@/interfaces/iresolver.js";
 
-import type IMediator from "@/interfaces/imediator.js";
-import Mediator from "@/models/mediator.js";
-import IPipelineBehavior from "@/interfaces/ipipeline.behavior.js";
+import PipelineBehavior from "@/interfaces/ipipeline.behavior.js";
 import pipelineBehavior from "@/attributes/pipeline.behavior.attribute.js";
+import Mediator from "./models/mediator";
 
 export {
-    IRequest,
-    IRequestHandler,
+    RequestBase as Request,
+    RequestHandler,
     requestHandler,
-    INotification,
+    Notification,
     notificationHandler,
-    INotificationHandler,
-    IDispatcher,
-    IResolver,
-    IMediator,
+    NotificationHandler,
+    Dispatcher,
+    Resolver,
     Mediator,
-    mediatorSettings,
-    IPipelineBehavior,
+    PipelineBehavior,
     pipelineBehavior
 };
 
@@ -36,13 +31,3 @@ export {
  * @deprecated Use requestHandler instead
  */
 export const Handler = requestHandler;
-
-/**
- * @deprecated Use requestHandler instead
- */
-export const RequestHandler = requestHandler;
-
-/**
- * @deprecated Use notificationHandler instead
- */
-export const NotificationHandler = notificationHandler;

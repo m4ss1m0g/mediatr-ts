@@ -1,12 +1,8 @@
 /**
  * The resolver.
- * Implement this interface and call mediatrSettings.resolver at startup
- * for changing the container and resolution of instances
- *
- * @export
- * @interface IResolver
+ * For changing the container and resolution of instances
  */
-export default interface IResolver {
+export default interface Resolver {
     /**
      * Retrieve a func from the container
      *

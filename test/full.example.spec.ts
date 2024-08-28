@@ -1,7 +1,10 @@
 /* eslint-disable @typescript-eslint/ban-types */
 import "reflect-metadata";
 import { Container, inject, injectable } from "inversify";
-import { mediatorSettings, Mediator, IResolver, IRequest, requestHandler, IRequestHandler } from "@/index.js";
+import RequestBase from "@/models/request.js";
+import Resolver from "@/models/resolver.js";
+import { default as ResolverInterface } from "@/interfaces/iresolver";
+import { Mediator, RequestHandler, requestHandler } from "@/index.js";
 
 
 describe("The full example", () => {
@@ -9,7 +12,7 @@ describe("The full example", () => {
     const container = new Container();
 
     // inversify.resolver.ts -> Implement the resolver
-    class InversifyResolver implements IResolver {
+    class InversifyResolver implements ResolverInterface {
         resolve<T>(name: string): T {
             return container.get(name);
         }
@@ -30,7 +33,7 @@ describe("The full example", () => {
     }
 
     // Set the resolver of MediatR-TS
-    mediatorSettings.resolver = new InversifyResolver();
+    Resolver.instance = new InversifyResolver();
 
     // You can later configure the inversify container
     interface IWarrior {
@@ -51,11 +54,11 @@ describe("The full example", () => {
     container.bind<IWarrior>(TYPES.IWarrior).to(Ninja);
 
     // The request object
-    class Request implements IRequest<number> {
-        public thenumber: number;
-
-        constructor(thenumber: number) {
-            this.thenumber = thenumber;
+    class Request extends RequestBase<string> {
+        constructor(
+            public readonly thenumber: number
+        ) {
+            super();
         }
     }
 
@@ -63,7 +66,7 @@ describe("The full example", () => {
     @requestHandler(Request)
     @injectable()
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    class HandlerRequest implements IRequestHandler<Request, string> {
+    class HandlerRequest implements RequestHandler<Request, string> {
         @inject(TYPES.IWarrior)
         public warrior!: IWarrior; // Instantiated by the inversify
 
@@ -74,7 +77,7 @@ describe("The full example", () => {
 
     test("Should resolve existing instance", async () => {
         const mediator = new Mediator();
-        const result = await mediator.send<string>(new Request(99));
+        const result = await mediator.send(new Request(99));
 
         expect(result).toBe("We has 99 ninja fight");
     });

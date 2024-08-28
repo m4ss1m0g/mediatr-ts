@@ -1,21 +1,21 @@
 /* eslint-disable @typescript-eslint/ban-types */
-import type { OrderMapping } from "@/interfaces/idispatcher.js";
-import type { INotificationClass } from "@/interfaces/inotification.js";
-import type { INotificationHandlerClass } from "@/interfaces/inotification.handler.js";
-import { INotification, mediatorSettings } from "@/index.js";
-import type { IPipelineBehaviorClass } from "@/interfaces/ipipeline.behavior.js";
+import type { OrderedMapping } from "@/interfaces/idispatcher.js";
+import type { NotificationClass } from "@/models/notification.js";
+import type { NotificationHandlerClass } from "@/interfaces/inotification.handler.js";
+import type { PipelineBehaviorClass } from "@/interfaces/ipipeline.behavior.js";
+import Resolver from "@/interfaces/iresolver";
 
-export abstract class OrderMappings<TData = {}> {
+export abstract class OrderedMappings<TData = {}> {
     // Contains the mapping of the event with the handler name
-    protected _mappings: OrderMapping<TData>[];
+    protected _mappings: OrderedMapping<TData>[];
 
     constructor() {
         this._mappings = [];
     }
 
-    protected abstract onAdded(mapping: OrderMapping<TData>): void;
+    protected abstract onAdded(mapping: OrderedMapping<TData>): void;
 
-    public add(mapping: OrderMapping<TData>): void {
+    public add(mapping: OrderedMapping<TData>): void {
         if(mapping.order !== 0) {
             mapping.order = this._mappings.length;
         }
@@ -29,28 +29,34 @@ export abstract class OrderMappings<TData = {}> {
     }
 }
 
-function byOrder<TIdentifier>(a: OrderMapping<TIdentifier>, b: OrderMapping<TIdentifier>): number {
+function byOrder<TIdentifier>(a: OrderedMapping<TIdentifier>, b: OrderedMapping<TIdentifier>): number {
     return (b.order || 0) - (a.order || 0);
 }
 
 type NotificationMappingData = { 
-    handler: INotificationHandlerClass<unknown>,
-    notification: INotification
+    handler: NotificationHandlerClass<unknown>,
+    notification: NotificationClass
 };
-export class NotificationMappings extends OrderMappings<NotificationMappingData> {
-    protected onAdded(mapping: OrderMapping<NotificationMappingData>): void {
-        const handlerName = mapping.handler.prototype.constructor.name;
-        mediatorSettings.resolver.add(handlerName, mapping.handler);
+export class NotificationMappings extends OrderedMappings<NotificationMappingData> {
+    public constructor(
+        private readonly resolver: Resolver
+    ) {
+        super();
     }
 
-    public setOrder<TNotification extends INotificationClass>(notification: INotificationClass, handlers: INotificationHandlerClass<TNotification>[]) {
+    protected onAdded(mapping: OrderedMapping<NotificationMappingData>): void {
+        const handlerName = mapping.handler.prototype.constructor.name;
+        this.resolver.add(handlerName, mapping.handler);
+    }
+
+    public setOrder<TNotification extends NotificationClass>(notification: NotificationClass, handlers: NotificationHandlerClass<TNotification>[]) {
         const all = this.getAll(notification);
         for(const handler of all) {
-            handler.order = handlers.indexOf(handler.handler as INotificationHandlerClass<TNotification>);
+            handler.order = handlers.indexOf(handler.handler as NotificationHandlerClass<TNotification>);
         }
     }
 
-    public getAll(notification: INotificationClass): OrderMapping<NotificationMappingData>[] {
+    public getAll(notification: NotificationClass): OrderedMapping<NotificationMappingData>[] {
         const items = this._mappings.filter((p) => p.notification === notification);
         if (items.length === 0)
             throw new Error(`Cannot find notification handler with key: ${(notification as unknown as Function).prototype.name}`);
@@ -60,22 +66,28 @@ export class NotificationMappings extends OrderMappings<NotificationMappingData>
 }
 
 type PipelineBehaviorData = {
-    behavior: IPipelineBehaviorClass
+    behavior: PipelineBehaviorClass
 };
-export class BehaviorMappings extends OrderMappings<PipelineBehaviorData> {
-    protected onAdded(mapping: OrderMapping<PipelineBehaviorData>): void {
-        const handlerName = mapping.behavior.prototype.constructor.name;
-        mediatorSettings.resolver.add(handlerName, mapping.behavior);
+export class BehaviorMappings extends OrderedMappings<PipelineBehaviorData> {
+    public constructor(
+        private readonly resolver: Resolver
+    ) {
+        super();
     }
 
-    public setOrder(behaviors: IPipelineBehaviorClass[]) {
+    protected onAdded(mapping: OrderedMapping<PipelineBehaviorData>): void {
+        const handlerName = mapping.behavior.prototype.constructor.name;
+        this.resolver.add(handlerName, mapping.behavior);
+    }
+
+    public setOrder(behaviors: PipelineBehaviorClass[]) {
         const all = this.getAll();
         for(const handler of all) {
-            handler.order = behaviors.indexOf(handler.behavior as IPipelineBehaviorClass);
+            handler.order = behaviors.indexOf(handler.behavior as PipelineBehaviorClass);
         }
     }
 
-    public getAll(): OrderMapping<PipelineBehaviorData>[] {
+    public getAll(): OrderedMapping<PipelineBehaviorData>[] {
         const items = [...this._mappings];
         return items.sort(byOrder);
     }

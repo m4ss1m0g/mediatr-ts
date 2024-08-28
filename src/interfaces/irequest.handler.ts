@@ -1,18 +1,15 @@
+import type RequestBase from "../models/request";
+
 /**
  * The Request Handler interface
- *
- * @export
- * @interface IRequestHandler
- * @template Input The input type
- * @template Output The output type
  */
-export default interface IRequestHandler<Input, Output> {
+export default interface RequestHandler<TInput extends RequestBase<TOutput>, TOutput> {
     /**
      * Handle the request
      *
-     * @param {Input} value The request value
-     * @returns {Promise<Output>}
+     * @param {TInput} value The request value
+     * @returns {Promise<TOutput>}
      * @memberof IRequestHandler
      */
-    handle(value: Input): Promise<Output>;
+    handle(value: TInput): Promise<TOutput>;
 }

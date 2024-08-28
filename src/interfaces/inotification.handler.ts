@@ -1,11 +1,7 @@
 /**
  * The notification handler class
- *
- * @export
- * @interface INotificationHandler
- * @template T
  */
-export default interface INotificationHandler<T> {
+export default interface NotificationHandler<T> {
     /**
      * The notification handler called on T event
      *
@@ -16,4 +12,4 @@ export default interface INotificationHandler<T> {
     handle(notification: T): Promise<void>;
 }
 
-export type INotificationHandlerClass<T> = new (...args: unknown[]) => INotificationHandler<T>;
+export type NotificationHandlerClass<T> = new (...args: unknown[]) => NotificationHandler<T>;

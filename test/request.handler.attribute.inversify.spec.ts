@@ -1,12 +1,19 @@
-/* eslint-disable @typescript-eslint/ban-types */
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import "reflect-metadata";
-import { Mediator, IRequestHandler, IResolver, mediatorSettings, IRequest, requestHandler } from "@/index.js";
+import {
+    Mediator,
+    RequestHandler,
+    requestHandler,
+} from "@/index.js";
 import { injectable, Container, inject } from "inversify";
+import { default as ResolverInterface } from "@/interfaces/iresolver"
+import Resolver from "@/models/resolver.js";
+import RequestBase from "@/models/request.js";
+import Dispatcher from "@/models/dispatcher/index.js";
 
 describe("Resolver with inversify", () => {
     beforeEach(()=>{
-        mediatorSettings.resolver.clear();
+        Resolver.instance = new Resolver();
+        Dispatcher.instance = new Dispatcher(Resolver.instance);
     });
 
     test("Should resolve own instances", () => {
@@ -55,7 +62,7 @@ describe("Resolver with inversify", () => {
         const c = new Container();
         c.bind<IWarrior>(TYPES.IWarrior).to(Ninja);
 
-        class InversifyResolver implements IResolver {
+        class InversifyResolver implements ResolverInterface {
             remove(name: string): void {
                 c.unbind(name);
             }
@@ -75,20 +82,20 @@ describe("Resolver with inversify", () => {
          */
 
         // Settings the resolver with Inversify
-        mediatorSettings.resolver = new InversifyResolver();
+        Resolver.instance = new InversifyResolver();
 
-        class Request implements IRequest<number> {
-            public thenumber: number;
-
-            constructor(thenumber: number) {
-                this.thenumber = thenumber;
+        class Request extends RequestBase<string> {
+            constructor(
+                public readonly thenumber: number
+            ) {
+                super();
             }
         }
 
         @requestHandler(Request)
         @injectable()
         // eslint-disable-next-line @typescript-eslint/no-unused-vars
-        class HandlerRequest implements IRequestHandler<Request, string> {
+        class HandlerRequest implements RequestHandler<Request, string> {
             @inject(TYPES.IWarrior)
             public warrior?: IWarrior;
 

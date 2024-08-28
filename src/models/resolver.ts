@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/ban-types */
-import type IResolver from "@/interfaces/iresolver.js";
+import type { default as ResolverInterface } from "@/interfaces/iresolver.js";
 import HandlerInstance from "@/models/handler.instance.js";
 
 
@@ -9,11 +9,29 @@ import HandlerInstance from "@/models/handler.instance.js";
  * 
  * @export
  * @class Resolver
- * @implements {IResolver}
+ * @implements {Resolver}
  */
-export default class Resolver implements IResolver {
-    // Contains the mapping of the functions
+export default class Resolver implements ResolverInterface {
+    private static _instance: ResolverInterface | undefined;
+
     private _instances: HandlerInstance[] = [];
+
+    public static get instance() {
+        if(this._instance) {
+            return this._instance;
+        }
+
+        const instance = new Resolver();
+        this._instance = instance;
+
+        return instance;
+    }
+
+    public static set instance(value: ResolverInterface) {
+        this._instance = value;
+    }
+
+    public constructor() {}
 
     /**
      * Retrieve a func from the container
