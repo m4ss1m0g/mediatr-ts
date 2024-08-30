@@ -2,7 +2,7 @@
 import type IResolver from "@/interfaces/iresolver";
 import HandlerInstance from "@/models/handler.instance";
 
-
+type FactoryFn<T> = (name: string, fx: Function) => T
 /**
  * The internal resolver
  * Here handler functions and relative keys are stored and retrieved.
@@ -14,6 +14,9 @@ import HandlerInstance from "@/models/handler.instance";
 export default class Resolver implements IResolver {
     // Contains the mapping of the functions
     private _instances: HandlerInstance[] = [];
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    private _factoryFn: FactoryFn<any> = (_, fx: any) => new fx()
+
 
     /**
      * Retrieve a func from the container
@@ -29,7 +32,7 @@ export default class Resolver implements IResolver {
 
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         const handlerFx: any = e.value;
-        return new handlerFx();
+        return this._factoryFn(name, handlerFx);
     }
 
     /**
@@ -66,4 +69,13 @@ export default class Resolver implements IResolver {
     public clear(): void {
         this._instances = [];
     }
+
+    /**
+     * Func invoked to instaniate a resolved dependency
+     *
+     * @memberof Resolver
+     */
+    public set factoryFn(factoryFn: FactoryFn<unknown>) {
+        this._factoryFn = factoryFn;
+    } 
 }

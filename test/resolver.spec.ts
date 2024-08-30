@@ -49,6 +49,23 @@ describe("The internal resolver", () => {
         expect(rfx).not.toBeUndefined();
     });
 
+    test("Should replace the default factoryFn", () => {
+        const r = new Resolver();
+
+        const fx = (): string => {
+            return "foo";
+        };
+        r.add("k1", fx);
+
+        const instance = "factory result";
+        r.factoryFn = () => instance;
+
+        const rfx = r.resolve("k1");
+        
+        expect(rfx).not.toBeUndefined();
+        expect(rfx).toBe(instance);
+    });
+
     test("Should remove an existing instance", () => {
         const r = new Resolver();
 
