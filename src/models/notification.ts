@@ -1,5 +1,3 @@
-const marker = Symbol();
-
 /**
  * The Notification interface
  *

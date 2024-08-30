@@ -23,6 +23,14 @@ export default class Mediator implements MediatorInterface {
     private readonly _dispatcher: Dispatcher;
     private readonly _resolver: Resolver;
 
+    public get dispatcher() {
+        return this._dispatcher;
+    }
+
+    public get resolver() {
+        return this._resolver;
+    }
+
     public constructor(
         dispatcher?: Dispatcher,
         resolver?: Resolver
