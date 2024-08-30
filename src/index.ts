@@ -2,7 +2,7 @@ import RequestBase from "@/models/request.js";
 import RequestHandler from "@/interfaces/irequest.handler.js";
 import requestHandler from "@/attributes/request.attribute.js";
 
-import type Notification from "@/models/notification.js";
+import NotificationBase from "@/models/notification.js";
 import type NotificationHandler from "@/interfaces/inotification.handler.js";
 import notificationHandler from "@/attributes/notification.attribute.js";
 
@@ -14,10 +14,10 @@ import pipelineBehavior from "@/attributes/pipeline.behavior.attribute.js";
 import Mediator from "./models/mediator";
 
 export {
-    RequestBase as Request,
+    RequestBase,
     RequestHandler,
     requestHandler,
-    Notification,
+    NotificationBase,
     notificationHandler,
     NotificationHandler,
     Dispatcher,
