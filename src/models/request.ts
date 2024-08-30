@@ -8,7 +8,7 @@ const marker = Symbol();
  * @template T
  */
 // eslint-disable-next-line @typescript-eslint/no-empty-interface,  @typescript-eslint/no-unused-vars
-export default class RequestBase<T> {
+export default class RequestBase<T = void> {
     [marker]: T = null!;
 }
 
