@@ -9,6 +9,7 @@ const marker = Symbol();
  */
 // eslint-disable-next-line @typescript-eslint/no-empty-interface,  @typescript-eslint/no-unused-vars
 export default class RequestBase<T = void> {
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     [marker]: T = null!;
 }
 

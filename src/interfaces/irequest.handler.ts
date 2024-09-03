@@ -13,3 +13,5 @@ export default interface RequestHandler<TInput extends RequestBase<TOutput>, TOu
      */
     handle(value: TInput): Promise<TOutput>;
 }
+
+export type RequestHandlerClass<TInput extends RequestBase<TOutput>, TOutput> = new (...args: unknown[]) => RequestHandler<TInput, TOutput>;

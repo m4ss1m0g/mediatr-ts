@@ -8,15 +8,15 @@ import {
     notificationHandler,
 } from "@/index.js";
 import { injectable, Container, inject } from "inversify";
-import { default as ResolverInterface } from "@/interfaces/iresolver"
-import Resolver from "@/models/resolver.js";
-import Dispatcher from "@/models/dispatcher/index.js";
+import Resolver, { Class } from "@/interfaces/iresolver";
 import NotificationBase from "@/models/notification.js";
+import { typeMappings } from "@/models/mappings.js";
 
 describe("Notification with inversify", () => {
     beforeEach(() => {
-        Resolver.instance = new Resolver();
-        Dispatcher.instance = new Dispatcher(Resolver.instance);
+        typeMappings.behaviors.clear();
+        typeMappings.notifications.clear();
+        typeMappings.requestHandlers.clear();
     });
 
     test("Should resolve the notification and inject inversify interfaces", async () => {
@@ -49,24 +49,15 @@ describe("Notification with inversify", () => {
             }
         }
 
-        class InversifyResolver implements ResolverInterface {
-            remove(name: string): void {
-                container.unbind(name);
+        class InversifyResolver implements Resolver {
+            resolve<T>(type: Class<T>): T {
+                return container.get(type);
             }
-            clear(): void {
-                container.unbindAll();
-            }
-            resolve<T>(name: string): T {
-                const fx: any = container.get(name);
-                return fx;
-            }
-            add(name: string, instance: Function): void {
-                container.bind(name).to(instance as any);
+    
+            add<T>(type: Class<T>): void {
+                container.bind(type).toSelf();
             }
         }
-
-        Resolver.instance = new InversifyResolver();
-        Dispatcher.instance = new Dispatcher(Resolver.instance);
 
         @notificationHandler(Ping)
         @injectable()
@@ -79,7 +70,9 @@ describe("Notification with inversify", () => {
             }
         }
 
-        const mediator = new Mediator();
+        const mediator = new Mediator({
+            resolver: new InversifyResolver(),
+        });
         await mediator.publish(new Ping(99));
 
         expect(result).toBe("We has 99 ninja fight");

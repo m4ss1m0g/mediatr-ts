@@ -3,23 +3,24 @@ import type Notification from "@/models/notification.js";
 import notificationHandler from "@/attributes/notification.attribute.js";
 import type NotificationHandler from "@/interfaces/inotification.handler.js";
 import { Mediator } from "@/index.js";
-import Resolver from "@/models/resolver.js";
-import Dispatcher from "@/models/dispatcher/index.js";
+import { typeMappings } from "@/models/mappings.js";
 
 describe("The notification attribute", () => {
+    beforeEach(() => {
+        jest.clearAllMocks();
+
+        typeMappings.behaviors.clear();
+        typeMappings.notifications.clear();
+        typeMappings.requestHandlers.clear();
+    });
+    
     class Ping implements Notification {
         constructor(public value: string){}
     }
 
-    beforeEach(()=>{
-        Resolver.instance = new Resolver();
-        Dispatcher.instance = new Dispatcher(Resolver.instance);
-    });
-
     test("Should add instance to dispatcher and resolver", () => {
         // Arrange
-        const spyDispatcher = jest.spyOn(Dispatcher.instance.notifications, "add");
-        const spyResolver = jest.spyOn(Resolver.instance, "add");
+        const spyDispatcher = jest.spyOn(typeMappings.notifications, "add");
 
         // Act
         @notificationHandler(Ping)
@@ -31,9 +32,6 @@ describe("The notification attribute", () => {
 
         // Assert
         expect(spyDispatcher).toBeCalledTimes(1);
-        expect(spyResolver).toBeCalledTimes(1);
-
-        jest.clearAllMocks();
     });
 
     test("Should resolve and call the notification", () => {
@@ -77,8 +75,8 @@ describe("The notification attribute", () => {
             }
         }
 
-        Dispatcher.instance.notifications.add({ notification: Ping, handler: Pong2, order: 2 });
-        Dispatcher.instance.notifications.add({ notification: Ping, handler: Pong1, order: 1 });
+        typeMappings.notifications.add({ notificationClass: Ping, handlerClass: Pong2, order: 2 });
+        typeMappings.notifications.add({ notificationClass: Ping, handlerClass: Pong1, order: 1 });
         
         // Act
         const mediator = new Mediator();

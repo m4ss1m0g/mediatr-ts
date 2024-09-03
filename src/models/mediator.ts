@@ -1,15 +1,17 @@
 /* eslint-disable @typescript-eslint/ban-types */
-import type { default as MediatorInterface } from "@/interfaces/imediator.js";
 import type Notification from "@/models/notification.js";
 import type { NotificationClass } from "@/models/notification.js";
 import type NotificationHandler from "@/interfaces/inotification.handler.js";
 import type RequestBase from "@/models/request.js";
 import type PipelineBehavior from "@/interfaces/ipipeline.behavior.js";
-import Dispatcher from "@/interfaces/idispatcher";
-import Resolver from "@/interfaces/iresolver";
+import Resolver, { Class } from "@/interfaces/iresolver";
 import RequestHandler from "@/interfaces/irequest.handler";
-import { default as DispatcherImplementation } from "./dispatcher";
-import { default as ResolverImplementation } from "./resolver";
+import { typeMappings } from "./mappings";
+import { InstantiationResolver } from "./resolver";
+
+type Settings = {
+    resolver: Resolver;
+}
 
 /**
  * The mediator class
@@ -19,26 +21,30 @@ import { default as ResolverImplementation } from "./resolver";
  * @class Mediator
  * @implements {Mediator}
  */
-export default class Mediator implements MediatorInterface {
-    private readonly _dispatcher: Dispatcher;
+export default class Mediator {
     private readonly _resolver: Resolver;
 
-    public get dispatcher() {
-        return this._dispatcher;
+    public constructor(settings?: Settings) {
+        const resolver = settings?.resolver || new InstantiationResolver();
+        this._resolver = resolver;
+
+        this.registerTypesInResolver(resolver);
     }
 
-    public get resolver() {
-        return this._resolver;
+    private registerTypesInResolver(resolver: Resolver) {
+        for (const mapping of typeMappings.notifications.getAll()) {
+            resolver.add(mapping.handlerClass);
+        }
+
+        for (const mapping of typeMappings.requestHandlers.getAll()) {
+            resolver.add(mapping.handlerClass);
+        }
+
+        for (const mapping of typeMappings.behaviors.getAll()) {
+            resolver.add(mapping.behaviorClass);
+        }
     }
 
-    public constructor(
-        dispatcher?: Dispatcher,
-        resolver?: Resolver
-    ) {
-        this._dispatcher = dispatcher || DispatcherImplementation.instance;
-        this._resolver = resolver || ResolverImplementation.instance;
-    }
-    
     /**
      * Send a request to the mediator
      *
@@ -48,18 +54,21 @@ export default class Mediator implements MediatorInterface {
      * @memberof Mediator
      */
     public async send<TResult>(request: RequestBase<TResult>): Promise<TResult> {
-        const name = request.constructor.name;
+        const handlerClasses = typeMappings.requestHandlers.getAll(request.constructor as Class<RequestBase<TResult>>);
+        if(handlerClasses.length === 0) {
+            throw new Error(`No handler found for request ${request.constructor.name}`);
+        }
 
-        const handler = this._resolver.resolve<RequestHandler<RequestBase<TResult>, TResult>>(name);
-        const behaviors = this._dispatcher.behaviors
+        const handler = this._resolver.resolve(handlerClasses[0].handlerClass as unknown as Class<RequestHandler<RequestBase<TResult>, TResult>>);
+        const behaviors = typeMappings.behaviors
             .getAll()
-            .map(p => p.behavior);
+            .map(p => p.behaviorClass);
         
         let currentBehaviorIndex = 0;
-        const next = async (): Promise<TResult> => {
+        const next = async () => {
             if(currentBehaviorIndex < behaviors.length) {
                 const behaviorClass = behaviors[currentBehaviorIndex];
-                const behavior = this._resolver.resolve<PipelineBehavior>((behaviorClass as unknown as Function).name);
+                const behavior = this._resolver.resolve(behaviorClass as unknown as Class<PipelineBehavior>);
                 currentBehaviorIndex++;
                 return await behavior.handle(request, next) as Promise<TResult>;
             }
@@ -79,10 +88,10 @@ export default class Mediator implements MediatorInterface {
      * @memberof Mediator
      */
     public async publish(message: Notification): Promise<void> {
-        const events = this._dispatcher.notifications.getAll(message.constructor as NotificationClass);
+        const events = typeMappings.notifications.getAll(message.constructor as NotificationClass);
 
         await Promise.all(events.map(async (p) => {
-            const handler = this._resolver.resolve<NotificationHandler<Notification>>((p.handler as unknown as Function).name);
+            const handler = this._resolver.resolve(p.handlerClass as unknown as Class<NotificationHandler<Notification>>);
             return handler.handle(message);
         }));
     }

@@ -6,15 +6,15 @@ import {
     requestHandler,
 } from "@/index.js";
 import { injectable, Container, inject } from "inversify";
-import { default as ResolverInterface } from "@/interfaces/iresolver"
-import Resolver from "@/models/resolver.js";
+import Resolver, { Class } from "@/interfaces/iresolver"
 import RequestBase from "@/models/request.js";
-import Dispatcher from "@/models/dispatcher/index.js";
+import { typeMappings } from "@/models/mappings.js";
 
 describe("Resolver with inversify", () => {
     beforeEach(()=>{
-        Resolver.instance = new Resolver();
-        Dispatcher.instance = new Dispatcher(Resolver.instance);
+        typeMappings.behaviors.clear();
+        typeMappings.notifications.clear();
+        typeMappings.requestHandlers.clear();
     });
 
     test("Should resolve own instances", () => {
@@ -60,31 +60,22 @@ describe("Resolver with inversify", () => {
             }
         }
 
-        const c = new Container();
-        c.bind<IWarrior>(TYPES.IWarrior).to(Ninja);
+        const container = new Container();
+        container.bind<IWarrior>(TYPES.IWarrior).to(Ninja);
 
-        class InversifyResolver implements ResolverInterface {
-            remove(name: string): void {
-                c.unbind(name);
+        class InversifyResolver implements Resolver {
+            resolve<T>(type: Class<T>): T {
+                return container.get(type);
             }
-            clear(): void {
-                c.unbindAll();
-            }
-            resolve<T>(name: string): T {
-                return c.get(name);
-            }
-            add(name: string, instance: Function): void {
-                c.bind(name).to(instance as any);
+    
+            add<T>(type: Class<T>): void {
+                container.bind(type).toSelf();
             }
         }
 
         /**
          *  Act
          */
-
-        // Settings the resolver with Inversify
-        Resolver.instance = new InversifyResolver();
-
         class Request extends RequestBase<string> {
             constructor(
                 public readonly thenumber: number
@@ -105,7 +96,9 @@ describe("Resolver with inversify", () => {
             }
         }
 
-        const mediator = new Mediator();
+        const mediator = new Mediator({
+            resolver: new InversifyResolver()
+        });
         const result = await mediator.send<string>(new Request(99));
 
         expect(result).toBe("We has 99 ninja fight");

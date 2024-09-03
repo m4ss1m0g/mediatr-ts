@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/ban-types */
 import type { NotificationClass } from "@/models/notification.js";
 import type { NotificationHandlerClass } from "@/interfaces/inotification.handler.js";
-import Dispatcher from "@/models/dispatcher/index.js";
+import { typeMappings } from "@/models/mappings.js";
 
 /**
  * Decorate the notificationHandler with this attribute
@@ -11,9 +11,9 @@ import Dispatcher from "@/models/dispatcher/index.js";
  */
 const notificationHandler = (value: NotificationClass) => {
     return (target: Function): void => {
-        Dispatcher.instance.notifications.add({
-            notification: value,
-            handler: target as NotificationHandlerClass<unknown>
+        typeMappings.notifications.add({
+            notificationClass: value,
+            handlerClass: target as NotificationHandlerClass<unknown>
         });
     };
 };

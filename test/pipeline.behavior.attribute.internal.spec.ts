@@ -6,14 +6,14 @@ import {
     RequestHandler,
     requestHandler,
 } from "@/index.js";
-import Resolver from "@/models/resolver.js";
-import Dispatcher from "@/models/dispatcher/index.js";
 import RequestBase from "@/models/request.js";
+import { typeMappings } from "@/models/mappings.js";
 
 describe("Resolver with local container", () => {
     beforeEach(() => {
-        Resolver.instance = new Resolver();
-        Dispatcher.instance = new Dispatcher(Resolver.instance);
+        typeMappings.behaviors.clear();
+        typeMappings.notifications.clear();
+        typeMappings.requestHandlers.clear();
     });
 
     test("Should resolve existing instance with one behavior", async () => {

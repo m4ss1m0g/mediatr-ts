@@ -1,40 +1,15 @@
-/**
- * The resolver.
- * For changing the container and resolution of instances
- */
 export default interface Resolver {
     /**
-     * Retrieve a func from the container
-     *
-     * @template T
-     * @param {string} name The instance name to retrieve
-     * @returns {T}
-     * @memberof IResolver
+     * Retrieve an instance of a particular class. Used for instantiating things like request handlers, pipeline behaviors and notification handlers.
+     * @param type The class to create an instance for.
      */
-    resolve<T>(name: string): T;
+    resolve<T>(type: Class<T>): T;
 
     /**
-     * Add a func and name to the container
-     *
-     * @param {string} name The instance name to add to the container
-     * @param {Function} instance The function to store with the instance name
-     * @memberof IResolver
+     * Add a class to the resolver. Useful for registering things like request handlers, pipeline behaviors and notification handlers in dependency injection libraries.
+     * @param type The class to create an instance for.
      */
-    // eslint-disable-next-line @typescript-eslint/ban-types
-    add(name: string, instance: Function): void;
-
-    /**
-     * Remove an isntance from the container
-     *
-     * @param {string} name The instance name to remove from the container
-     * @memberof IResolver
-     */
-    remove(name: string): void;
-
-    /**
-     * Clear the container
-     *
-     * @memberof IResolver
-     */
-    clear(): void;
+    add<T>(type: Class<T>): void;
 }
+
+export type Class<T> = new (...args: unknown[]) => T;

@@ -5,7 +5,7 @@
  * @interface IRequest
  * @template T
  */
-// eslint-disable-next-line @typescript-eslint/no-empty-interface,  @typescript-eslint/no-unused-vars
+// eslint-disable-next-line @typescript-eslint/no-empty-interface
 export default class NotificationBase {
 }
 

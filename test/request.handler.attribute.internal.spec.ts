@@ -4,20 +4,18 @@ import {
     RequestHandler,
     requestHandler,
 } from "@/index.js";
-import Resolver from "@/models/resolver.js";
 import RequestBase from "@/models/request.js";
-import Dispatcher from "@/models/dispatcher/index.js";
+import { typeMappings } from "@/models/mappings.js";
 
 describe("Resolver with local container", () => {
     beforeEach(() => {
-        Resolver.instance = new Resolver();
-        Dispatcher.instance = new Dispatcher(Resolver.instance);
+        typeMappings.behaviors.clear();
+        typeMappings.notifications.clear();
+        typeMappings.requestHandlers.clear();
     });
 
     test("Should resolve existing instance", async () => {
         // Arrange
-        Resolver.instance = new Resolver();
-
         class Request extends RequestBase<string> {
             name?: string;
         }
@@ -43,10 +41,9 @@ describe("Resolver with local container", () => {
 
     test("Should add the instance to the container when adding attribute to a class", () => {
         // Arrange
-        Resolver.instance = new Resolver();
 
         // Add the spy
-        const add = jest.spyOn(Resolver.instance, "add");
+        const add = jest.spyOn(typeMappings.requestHandlers, "add");
 
         class Request extends RequestBase<string> {
             name?: string;
@@ -66,8 +63,6 @@ describe("Resolver with local container", () => {
 
     test("Should throw duplicate key when adding attribute with same class the resolver", () => {
         // Arrange
-        Resolver.instance = new Resolver();
-
         class Request extends RequestBase<string> {
             name?: string;
         }

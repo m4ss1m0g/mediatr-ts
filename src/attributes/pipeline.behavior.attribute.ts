@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/ban-types */
 
 import type { PipelineBehaviorClass } from "@/interfaces/ipipeline.behavior.js";
-import Dispatcher from "@/models/dispatcher/index.js";
+import { typeMappings } from "@/models/mappings.js";
 
 /**
  * Decorate the pipelineBehavior with this attribute
@@ -10,8 +10,8 @@ import Dispatcher from "@/models/dispatcher/index.js";
  */
 const pipelineBehavior = () => {
     return (target: Function): void => {
-        Dispatcher.instance.behaviors.add({
-            behavior: target as PipelineBehaviorClass
+        typeMappings.behaviors.add({
+            behaviorClass: target as PipelineBehaviorClass
         });
     };
 };
