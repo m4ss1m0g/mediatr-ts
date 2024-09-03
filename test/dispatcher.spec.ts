@@ -7,7 +7,7 @@ import { typeMappings } from "@/models/mappings.js";
 
 describe("The internal dispatcher", () => {
     beforeEach(() => {
-        typeMappings.behaviors.clear();
+        typeMappings.pipelineBehaviors.clear();
         typeMappings.notifications.clear();
         typeMappings.requestHandlers.clear();
     });
@@ -77,14 +77,14 @@ describe("The internal dispatcher", () => {
         const b2 = PipelineBehaviorTest2 as PipelineBehaviorClass;
 
         // Act
-        typeMappings.behaviors.add({ behaviorClass: b2, order: 33 });
-        typeMappings.behaviors.add({ behaviorClass: b1, order: 22 });
+        typeMappings.pipelineBehaviors.add({ behaviorClass: b2, order: 33 });
+        typeMappings.pipelineBehaviors.add({ behaviorClass: b1, order: 22 });
 
         const a: PipelineBehaviorClass[] = [b1, b2];
-        typeMappings.behaviors.setOrder(a);
+        typeMappings.pipelineBehaviors.setOrder(a);
 
         // Assert
-        const items = typeMappings.behaviors.getAll();
+        const items = typeMappings.pipelineBehaviors.getAll();
 
         expect(items[0].order).toBe(1);
         expect(items[0].behaviorClass).toBe(b2);

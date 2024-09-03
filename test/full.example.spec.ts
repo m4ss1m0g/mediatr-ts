@@ -8,7 +8,7 @@ import { typeMappings } from "@/models/mappings.js";
 
 describe("The full example", () => {
     beforeEach(() => {
-        typeMappings.behaviors.clear();
+        typeMappings.pipelineBehaviors.clear();
         typeMappings.notifications.clear();
         typeMappings.requestHandlers.clear();
     });

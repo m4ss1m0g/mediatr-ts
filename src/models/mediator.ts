@@ -24,6 +24,14 @@ type Settings = {
 export default class Mediator {
     private readonly _resolver: Resolver;
 
+    public get notifications(): OrderedNotificationsMapping {
+        return typeMappings.notifications;
+    }
+
+    public get pipelineBehaviors(): OrderedPipelineBehaviorsMapping {
+        return typeMappings.pipelineBehaviors;
+    }
+
     public constructor(settings?: Settings) {
         const resolver = settings?.resolver || new InstantiationResolver();
         this._resolver = resolver;
@@ -40,7 +48,7 @@ export default class Mediator {
             resolver.add(mapping.handlerClass);
         }
 
-        for (const mapping of typeMappings.behaviors.getAll()) {
+        for (const mapping of typeMappings.pipelineBehaviors.getAll()) {
             resolver.add(mapping.behaviorClass);
         }
     }
@@ -60,7 +68,7 @@ export default class Mediator {
         }
 
         const handler = this._resolver.resolve(handlerClasses[0].handlerClass as unknown as Class<RequestHandler<RequestBase<TResult>, TResult>>);
-        const behaviors = typeMappings.behaviors
+        const behaviors = typeMappings.pipelineBehaviors
             .getAll()
             .map(p => p.behaviorClass);
         
@@ -96,3 +104,6 @@ export default class Mediator {
         }));
     }
 }
+
+type OrderedNotificationsMapping = Pick<typeof typeMappings.notifications, 'setOrder'>;
+type OrderedPipelineBehaviorsMapping = Pick<typeof typeMappings.pipelineBehaviors, 'setOrder'>;

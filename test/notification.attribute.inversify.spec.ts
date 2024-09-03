@@ -14,7 +14,7 @@ import { typeMappings } from "@/models/mappings.js";
 
 describe("Notification with inversify", () => {
     beforeEach(() => {
-        typeMappings.behaviors.clear();
+        typeMappings.pipelineBehaviors.clear();
         typeMappings.notifications.clear();
         typeMappings.requestHandlers.clear();
     });

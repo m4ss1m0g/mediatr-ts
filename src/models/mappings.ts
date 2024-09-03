@@ -87,7 +87,7 @@ function byOrder<TIdentifier>(a: OrderedMapping<TIdentifier>, b: OrderedMapping<
 }
 
 export const typeMappings = {
-    behaviors: new BehaviorMappings(),
+    pipelineBehaviors: new BehaviorMappings(),
     notifications: new NotificationMappings(),
     requestHandlers: new RequestMappings(),
 }

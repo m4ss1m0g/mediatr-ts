@@ -10,7 +10,7 @@ import { typeMappings } from "@/models/mappings.js";
  */
 const pipelineBehavior = () => {
     return (target: Function): void => {
-        typeMappings.behaviors.add({
+        typeMappings.pipelineBehaviors.add({
             behaviorClass: target as PipelineBehaviorClass
         });
     };

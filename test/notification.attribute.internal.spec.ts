@@ -9,7 +9,7 @@ describe("The notification attribute", () => {
     beforeEach(() => {
         jest.clearAllMocks();
 
-        typeMappings.behaviors.clear();
+        typeMappings.pipelineBehaviors.clear();
         typeMappings.notifications.clear();
         typeMappings.requestHandlers.clear();
     });

@@ -11,7 +11,7 @@ import { typeMappings } from "@/models/mappings.js";
 
 describe("Resolver with local container", () => {
     beforeEach(() => {
-        typeMappings.behaviors.clear();
+        typeMappings.pipelineBehaviors.clear();
         typeMappings.notifications.clear();
         typeMappings.requestHandlers.clear();
     });

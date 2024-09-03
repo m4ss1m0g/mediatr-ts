@@ -198,7 +198,7 @@ class PipelineBehaviorTest2 implements PipelineBehavior {
 
 const mediator = new Mediator();
 // Set the order of the pipeline behaviors. PipelineBehaviorTest2 will be executed first, and then PipelineBehaviorTest1.
-mediator.dispatcher.behaviors.setOrder([
+mediator.pipelineBehaviors.setOrder([
     PipelineBehaviorTest2, 
     PipelineBehaviorTest1
 ]);
@@ -218,22 +218,12 @@ const container = new Container();
 
 // inversify.resolver.ts -> Implement the resolver
 class InversifyResolver implements Resolver {
-    resolve<T>(name: string): T {
-        return container.get(name);
+    resolve<T>(type: Class<T>): T {
+        return container.get(type);
     }
 
-    add(name: string, instance: Function): void {
-        container.bind(name).to(instance as any);
-    }
-
-    remove(name: string): void {
-        // not necessary- can be blank, never called by the lib, for debugging / testing only
-        container.unbind(name);
-    }
-
-    clear(): void {
-        // not necessary- can be blank, never called by the lib, for debugging / testing only
-        container.unbindAll();
+    add<T>(type: Class<T>): void {
+        container.bind(type).toSelf();
     }
 }
 
@@ -277,10 +267,9 @@ class HandlerRequest implements RequestHandler<Request, string> {
     }
 }
 
-const mediator = new Mediator();
-
-// Set the resolver of MediatR-TS
-mediator.resolver = new InversifyResolver();
+const mediator = new Mediator({
+    resolver: new InversifyResolver()
+});
 
 const result = await mediator.send(new Request(99));
 
