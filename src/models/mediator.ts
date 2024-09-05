@@ -6,7 +6,7 @@ import type RequestBase from "@/models/request.js";
 import type PipelineBehavior from "@/interfaces/ipipeline.behavior.js";
 import Resolver, { Class } from "@/interfaces/iresolver";
 import RequestHandler from "@/interfaces/irequest.handler";
-import { typeMappings } from "./mappings";
+import { typeMappings } from "./mappings/index.js";
 import { InstantiationResolver } from "./resolver";
 
 type Settings = {
@@ -14,8 +14,8 @@ type Settings = {
 }
 
 /**
- * The mediator class
- * Send request and publish events
+ * The mediator class.
+ * Sends request and publishes events.
  *
  * @export
  * @class Mediator
@@ -54,7 +54,7 @@ export default class Mediator {
     }
 
     /**
-     * Send a request to the mediator
+     * Send a request to the mediator.
      *
      * @template T
      * @param {RequestBase<T>} request The request to send
@@ -62,30 +62,49 @@ export default class Mediator {
      * @memberof Mediator
      */
     public async send<TResult>(request: RequestBase<TResult>): Promise<TResult> {
-        const handlerClasses = typeMappings.requestHandlers.getAll(request.constructor as Class<RequestBase<TResult>>);
-        if(handlerClasses.length === 0) {
-            throw new Error(`No handler found for request ${request.constructor.name}`);
-        }
+        const handler = this.getRequiredHandlerForRequest<TResult>(request);
+        return this.wrapInPipelineBehaviorChainCalls<TResult>(
+            async () => handler.handle(request),
+            request, 
+        );
+    }
 
-        const handler = this._resolver.resolve(handlerClasses[0].handlerClass as unknown as Class<RequestHandler<RequestBase<TResult>, TResult>>);
-        const behaviors = typeMappings.pipelineBehaviors
-            .getAll()
-            .map(p => p.behaviorClass);
-        
+    /**
+     * Wraps the given function in a chain of pipeline behavior calls.
+     * On the deepest level, the action is called.
+     * Then the chain of pipeline behaviors is called in reverse order on the result of that.
+     */
+    private async wrapInPipelineBehaviorChainCalls<TResult>(func: () => Promise<TResult>, request: RequestBase<TResult>) {
         let currentBehaviorIndex = 0;
+        const behaviors = typeMappings.pipelineBehaviors.getAll();
+
+        const getNextBehaviorInChain = () => {
+            const behaviorClass = behaviors[currentBehaviorIndex++].behaviorClass;
+            return this._resolver.resolve(behaviorClass as unknown as Class<PipelineBehavior>);
+        };
+
         const next = async () => {
-            if(currentBehaviorIndex < behaviors.length) {
-                const behaviorClass = behaviors[currentBehaviorIndex];
-                const behavior = this._resolver.resolve(behaviorClass as unknown as Class<PipelineBehavior>);
-                currentBehaviorIndex++;
-                return await behavior.handle(request, next) as Promise<TResult>;
+            const areMoreBehaviorsNeedingProcessing = currentBehaviorIndex < behaviors.length;
+            if (areMoreBehaviorsNeedingProcessing) {
+                const nextBehaviorInChain = getNextBehaviorInChain();
+                return await nextBehaviorInChain.handle(request, next) as Promise<TResult>;
             }
             else {
-                return await handler.handle(request);
+                return await func();
             }
         };
 
         return await next();
+    }
+
+    private getRequiredHandlerForRequest<TResult>(request: RequestBase<TResult>) {
+        const handlerClasses = typeMappings.requestHandlers.getAll(request.constructor as Class<RequestBase<TResult>>);
+        if (handlerClasses.length === 0) {
+            throw new Error(`No handler found for request ${request.constructor.name}`);
+        }
+
+        const handler = this._resolver.resolve(handlerClasses[0].handlerClass as unknown as Class<RequestHandler<RequestBase<TResult>, TResult>>);
+        return handler;
     }
 
     /**
