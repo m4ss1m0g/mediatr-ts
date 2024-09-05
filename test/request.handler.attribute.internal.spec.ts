@@ -5,7 +5,7 @@ import {
     requestHandler,
 } from "@/index.js";
 import RequestBase from "@/models/request.js";
-import { typeMappings } from "@/models/mappings.js";
+import { typeMappings } from "@/models/mappings/index.js";
 
 describe("Resolver with local container", () => {
     beforeEach(() => {

@@ -3,7 +3,7 @@ import NotificationHandler, { NotificationHandlerClass } from "@/interfaces/inot
 import PipelineBehavior, { PipelineBehaviorClass } from "@/interfaces/ipipeline.behavior";
 import RequestBase from "@/models/request.js";
 import NotificationBase from "@/models/notification.js";
-import { typeMappings } from "@/models/mappings.js";
+import { typeMappings } from "@/models/mappings/index.js";
 
 describe("The internal dispatcher", () => {
     beforeEach(() => {

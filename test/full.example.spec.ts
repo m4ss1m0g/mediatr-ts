@@ -4,7 +4,7 @@ import { Container, inject, injectable } from "inversify";
 import RequestBase from "@/models/request.js";
 import { Mediator, RequestHandler, requestHandler, Resolver } from "@/index.js";
 import { Class } from "@/interfaces/iresolver";
-import { typeMappings } from "@/models/mappings.js";
+import { typeMappings } from "@/models/mappings/index.js";
 
 describe("The full example", () => {
     beforeEach(() => {

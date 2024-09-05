@@ -10,7 +10,7 @@ import {
 import { injectable, Container, inject } from "inversify";
 import Resolver, { Class } from "@/interfaces/iresolver";
 import NotificationBase from "@/models/notification.js";
-import { typeMappings } from "@/models/mappings.js";
+import { typeMappings } from "@/models/mappings/index.js";
 
 describe("Notification with inversify", () => {
     beforeEach(() => {

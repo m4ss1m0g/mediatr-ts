@@ -3,7 +3,7 @@ import type Notification from "@/models/notification.js";
 import notificationHandler from "@/attributes/notification.attribute.js";
 import type NotificationHandler from "@/interfaces/inotification.handler.js";
 import { Mediator } from "@/index.js";
-import { typeMappings } from "@/models/mappings.js";
+import { typeMappings } from "@/models/mappings/index.js";
 
 describe("The notification attribute", () => {
     beforeEach(() => {

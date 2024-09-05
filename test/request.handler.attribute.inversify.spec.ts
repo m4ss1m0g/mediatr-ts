@@ -8,7 +8,7 @@ import {
 import { injectable, Container, inject } from "inversify";
 import Resolver, { Class } from "@/interfaces/iresolver"
 import RequestBase from "@/models/request.js";
-import { typeMappings } from "@/models/mappings.js";
+import { typeMappings } from "@/models/mappings/index.js";
 
 describe("Resolver with inversify", () => {
     beforeEach(()=>{

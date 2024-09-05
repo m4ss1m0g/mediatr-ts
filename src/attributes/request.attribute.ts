@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/ban-types */
 import { RequestHandlerClass } from "@/interfaces/irequest.handler";
-import { typeMappings } from "@/models/mappings.js";
+import { typeMappings } from "@/models/mappings/index.js";
 import type { RequestClass } from "@/models/request.js";
 import RequestBase from "@/models/request.js";
 

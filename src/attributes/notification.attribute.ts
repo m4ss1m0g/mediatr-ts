@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/ban-types */
 import type { NotificationClass } from "@/models/notification.js";
 import type { NotificationHandlerClass } from "@/interfaces/inotification.handler.js";
-import { typeMappings } from "@/models/mappings.js";
+import { typeMappings } from "@/models/mappings/index.js";
 
 /**
  * Decorate the notificationHandler with this attribute
