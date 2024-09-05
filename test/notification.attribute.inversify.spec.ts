@@ -9,7 +9,7 @@ import {
 } from "@/index.js";
 import { injectable, Container, inject } from "inversify";
 import Resolver, { Class } from "@/interfaces/iresolver";
-import NotificationBase from "@/models/notification.js";
+import NotificationData from "@/models/notification.js";
 import { typeMappings } from "@/models/mappings/index.js";
 
 describe("Notification with inversify", () => {
@@ -40,7 +40,7 @@ describe("Notification with inversify", () => {
         const container = new Container();
         container.bind<IWarrior>(TYPES.IWarrior).to(Ninja);
 
-        class Ping extends NotificationBase {
+        class Ping extends NotificationData {
             public thenumber: number;
 
             constructor(thenumber: number) {

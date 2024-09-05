@@ -7,7 +7,7 @@ import {
 } from "@/index.js";
 import { injectable, Container, inject } from "inversify";
 import Resolver, { Class } from "@/interfaces/iresolver"
-import RequestBase from "@/models/request.js";
+import RequestData from "@/models/request-data.js";
 import { typeMappings } from "@/models/mappings/index.js";
 
 describe("Resolver with inversify", () => {
@@ -76,7 +76,7 @@ describe("Resolver with inversify", () => {
         /**
          *  Act
          */
-        class Request extends RequestBase<string> {
+        class Request extends RequestData<string> {
             constructor(
                 public readonly thenumber: number
             ) {

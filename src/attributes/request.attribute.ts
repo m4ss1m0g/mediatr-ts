@@ -1,15 +1,15 @@
 /* eslint-disable @typescript-eslint/ban-types */
 import { RequestHandlerClass } from "@/interfaces/irequest.handler";
 import { typeMappings } from "@/models/mappings/index.js";
-import type { RequestClass } from "@/models/request.js";
-import RequestBase from "@/models/request.js";
+import type { RequestDataClass } from "@/models/request-data.js";
+import RequestData from "@/models/request-data.js";
 
 /**
  * Decorate the requestHandler with this attribute
  * 
  * @param value The request type
  */
-const requestHandler = <T>(value: RequestClass<T>) => {
+const requestHandler = <T>(value: RequestDataClass<T>) => {
     return (target: Function): void => {
         const existingTypeMappings = typeMappings.requestHandlers.getAll().filter(x => x.requestClass === value);
         if(existingTypeMappings.length > 0) {
@@ -18,7 +18,7 @@ const requestHandler = <T>(value: RequestClass<T>) => {
 
         typeMappings.requestHandlers.add({
             requestClass: value,
-            handlerClass: target as RequestHandlerClass<RequestBase<unknown>, unknown>
+            handlerClass: target as RequestHandlerClass<RequestData<unknown>, unknown>
         });
     };
 };

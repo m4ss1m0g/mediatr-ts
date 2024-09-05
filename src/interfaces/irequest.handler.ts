@@ -1,9 +1,9 @@
-import type RequestBase from "../models/request";
+import type RequestData from "../models/request-data";
 
 /**
  * The Request Handler interface
  */
-export default interface RequestHandler<TInput extends RequestBase<TOutput>, TOutput> {
+export default interface RequestHandler<TInput extends RequestData<TOutput>, TOutput> {
     /**
      * Handle the request
      *
@@ -14,4 +14,4 @@ export default interface RequestHandler<TInput extends RequestBase<TOutput>, TOu
     handle(value: TInput): Promise<TOutput>;
 }
 
-export type RequestHandlerClass<TInput extends RequestBase<TOutput>, TOutput> = new (...args: unknown[]) => RequestHandler<TInput, TOutput>;
+export type RequestHandlerClass<TInput extends RequestData<TOutput>, TOutput> = new (...args: unknown[]) => RequestHandler<TInput, TOutput>;

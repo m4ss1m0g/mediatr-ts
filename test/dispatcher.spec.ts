@@ -1,8 +1,8 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import NotificationHandler, { NotificationHandlerClass } from "@/interfaces/inotification.handler";
 import PipelineBehavior, { PipelineBehaviorClass } from "@/interfaces/ipipeline.behavior";
-import RequestBase from "@/models/request.js";
-import NotificationBase from "@/models/notification.js";
+import RequestData from "@/models/request-data.js";
+import NotificationData from "@/models/notification.js";
 import { typeMappings } from "@/models/mappings/index.js";
 
 describe("The internal dispatcher", () => {
@@ -14,7 +14,7 @@ describe("The internal dispatcher", () => {
 
     test("Should setOrder on dispatcher notifications", () => {
         // Arrange
-        class Ping extends NotificationBase {
+        class Ping extends NotificationData {
             constructor(public value: string) { super(); }
         }
 
@@ -30,7 +30,7 @@ describe("The internal dispatcher", () => {
             }
         }
 
-        class Foo extends NotificationBase {
+        class Foo extends NotificationData {
             constructor(public value: string) { super(); }
         }
 
@@ -62,13 +62,13 @@ describe("The internal dispatcher", () => {
     test("Should setOrder on dispatcher behaviout", () => {
         // Arrange
         class PipelineBehaviorTest1 implements PipelineBehavior {
-            async handle(request: RequestBase<unknown>, next: () => unknown): Promise<unknown> {
+            async handle(request: RequestData<unknown>, next: () => unknown): Promise<unknown> {
                 return await next();
             }
         }
 
         class PipelineBehaviorTest2 implements PipelineBehavior {
-            async handle(request: RequestBase<unknown>, next: () => unknown): Promise<unknown> {
+            async handle(request: RequestData<unknown>, next: () => unknown): Promise<unknown> {
                 return await next();
             }
         }
@@ -97,7 +97,7 @@ describe("The internal dispatcher", () => {
 
     test("Should add a new DispatchInstance to the container", () => {
         // Arrange
-        class Ping extends NotificationBase {
+        class Ping extends NotificationData {
             constructor(public value: string) { super(); }
         }
 
@@ -117,7 +117,7 @@ describe("The internal dispatcher", () => {
 
     test("Should clear all instances from the container", () => {
         // Arrange
-        class Ping extends NotificationBase {
+        class Ping extends NotificationData {
             constructor(public value: string) { super(); }
         }
 
@@ -146,7 +146,7 @@ describe("The internal dispatcher", () => {
 
     test("Should throw error when it doesn't find the event", () => {
         // Arrange
-        class Ping extends NotificationBase {
+        class Ping extends NotificationData {
             constructor(public value: string) { super(); }
         }
 
@@ -157,7 +157,7 @@ describe("The internal dispatcher", () => {
 
     test("Should get specified number of instances from the container", () => {
         // Arrange
-        class Ping extends NotificationBase {
+        class Ping extends NotificationData {
             constructor(public value: string) { super(); }
         }
 
@@ -173,7 +173,7 @@ describe("The internal dispatcher", () => {
             }
         }
 
-        class Foo extends NotificationBase {
+        class Foo extends NotificationData {
             constructor(public value: string) { super(); }
         }
 

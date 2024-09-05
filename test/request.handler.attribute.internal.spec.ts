@@ -4,7 +4,7 @@ import {
     RequestHandler,
     requestHandler,
 } from "@/index.js";
-import RequestBase from "@/models/request.js";
+import RequestData from "@/models/request-data.js";
 import { typeMappings } from "@/models/mappings/index.js";
 
 describe("Resolver with local container", () => {
@@ -16,7 +16,7 @@ describe("Resolver with local container", () => {
 
     test("Should resolve existing instance", async () => {
         // Arrange
-        class Request extends RequestBase<string> {
+        class Request extends RequestData<string> {
             name?: string;
         }
 
@@ -45,7 +45,7 @@ describe("Resolver with local container", () => {
         // Add the spy
         const add = jest.spyOn(typeMappings.requestHandlers, "add");
 
-        class Request extends RequestBase<string> {
+        class Request extends RequestData<string> {
             name?: string;
         }
 
@@ -63,7 +63,7 @@ describe("Resolver with local container", () => {
 
     test("Should throw duplicate key when adding attribute with same class the resolver", () => {
         // Arrange
-        class Request extends RequestBase<string> {
+        class Request extends RequestData<string> {
             name?: string;
         }
 

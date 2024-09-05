@@ -6,7 +6,7 @@ import {
     RequestHandler,
     requestHandler,
 } from "@/index.js";
-import RequestBase from "@/models/request.js";
+import RequestData from "@/models/request-data.js";
 import { typeMappings } from "@/models/mappings/index.js";
 
 describe("Resolver with local container", () => {
@@ -19,7 +19,7 @@ describe("Resolver with local container", () => {
     test("Should resolve existing instance with one behavior", async () => {
         // Arrange
 
-        class Request extends RequestBase<string> {
+        class Request extends RequestData<string> {
             name?: string;
         }
 
@@ -33,7 +33,7 @@ describe("Resolver with local container", () => {
 
         @pipelineBehavior()
         class PipelineBehaviorTest implements PipelineBehavior {
-            async handle(request: RequestBase<unknown>, next: () => unknown): Promise<unknown> {
+            async handle(request: RequestData<unknown>, next: () => unknown): Promise<unknown> {
                 if (request instanceof Request) {
                     request.name += " with stuff";
                 }
@@ -60,7 +60,7 @@ describe("Resolver with local container", () => {
 
     test("Should resolve existing instance with two behaviors", async () => {
         // Arrange
-        class Request extends RequestBase<string> {
+        class Request extends RequestData<string> {
             name?: string;
         }
 
@@ -74,7 +74,7 @@ describe("Resolver with local container", () => {
 
         @pipelineBehavior()
         class PipelineBehaviorTest1 implements PipelineBehavior {
-            async handle(request: RequestBase<unknown>, next: () => unknown): Promise<unknown> {
+            async handle(request: RequestData<unknown>, next: () => unknown): Promise<unknown> {
                 if (request instanceof Request) {
                     request.name += " with stuff 1";
                 }
@@ -90,7 +90,7 @@ describe("Resolver with local container", () => {
 
         @pipelineBehavior()
         class PipelineBehaviorTest2 implements PipelineBehavior {
-            async handle(request: RequestBase<unknown>, next: () => unknown): Promise<unknown> {
+            async handle(request: RequestData<unknown>, next: () => unknown): Promise<unknown> {
                 if (request instanceof Request) {
                     request.name += " with stuff 2";
                 }

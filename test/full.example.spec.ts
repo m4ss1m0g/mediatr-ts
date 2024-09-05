@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/ban-types */
 import "reflect-metadata";
 import { Container, inject, injectable } from "inversify";
-import RequestBase from "@/models/request.js";
+import RequestData from "@/models/request-data.js";
 import { Mediator, RequestHandler, requestHandler, Resolver } from "@/index.js";
 import { Class } from "@/interfaces/iresolver";
 import { typeMappings } from "@/models/mappings/index.js";
@@ -46,7 +46,7 @@ describe("The full example", () => {
         container.bind<IWarrior>(TYPES.IWarrior).to(Ninja);
     
         // The request object
-        class Request extends RequestBase<string> {
+        class Request extends RequestData<string> {
             constructor(
                 public readonly thenumber: number
             ) {
