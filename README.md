@@ -21,7 +21,7 @@ Below the `requestHandler` pattern with internal resolver and with the inversify
 
 ```typescript
 // request.ts -> Define the request
-class Request extends RequestBase<string> {
+class Request extends RequestData<string> {
     name: string;
 }
 
@@ -54,7 +54,7 @@ import { Mediator } from "mediatr-ts";
 const result: string[] = [];
 
 // The notification class
-class Ping extends NotificationBase {
+class Ping extends NotificationData {
     constructor(public value?: string){ super(); }
 }
 
@@ -77,12 +77,12 @@ mediator.publish(new Ping(message));
 By default, the notification handlers will run in the order that they are loaded in. This might not be desirable, since it depends on the order of the imports. To change the order, you can set it explicitly.
 
 ```typescript
-import { Mediator, NotificationBase, NotificationHandler } from "mediatr-ts";
+import { Mediator, NotificationData, NotificationHandler } from "mediatr-ts";
 
 const result: string[] = [];
 
 // The notification class
-class Ping extends NotificationBase {
+class Ping extends NotificationData {
     constructor(public value?: string){}
 }
 
@@ -121,9 +121,9 @@ mediator.publish(new Ping("Foo"));
 ### Pipeline behaviors
 
 ```typescript
-import { Mediator, PipelineBehavior, RequestHandler, RequestBase } from "mediatr-ts";
+import { Mediator, PipelineBehavior, RequestHandler, RequestData } from "mediatr-ts";
 
-class Request extends RequestBase {
+class Request extends RequestData {
     name?: string;
 }
 
@@ -212,7 +212,7 @@ At the very beginning of your app you **MUST** setup the resolver with Inversify
 
 ```typescript
 import { Container } from "inversify";
-import { Mediator, Resolver, requestHandler, RequestBase } from "mediatr-ts";
+import { Mediator, Resolver, requestHandler, RequestData } from "mediatr-ts";
 
 const container = new Container();
 
@@ -246,7 +246,7 @@ class Ninja implements IWarrior {
 container.bind<IWarrior>(TYPES.IWarrior).to(Ninja);
 
 // The request object
-class Request extends RequestBase<number> {
+class Request extends RequestData<number> {
     public thenumber: number;
 
     constructor(thenumber: number) {
