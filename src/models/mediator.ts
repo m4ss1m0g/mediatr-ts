@@ -6,7 +6,7 @@ import type RequestBase from "@/models/request.js";
 import type PipelineBehavior from "@/interfaces/ipipeline.behavior.js";
 import Resolver, { Class } from "@/interfaces/iresolver";
 import RequestHandler from "@/interfaces/irequest.handler";
-import { typeMappings } from "./mappings/index.js";
+import { typeMappings } from "@/models/mappings/index.js";
 import { InstantiationResolver } from "./resolver";
 
 type Settings = {
