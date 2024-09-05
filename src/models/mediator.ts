@@ -22,16 +22,30 @@ type Settings = {
  * @implements {Mediator}
  */
 export default class Mediator {
+    // The resolver
     private readonly _resolver: Resolver;
 
+    /**
+     * Gets the notifications.
+     */
     public get notifications(): OrderedNotificationsMapping {
         return typeMappings.notifications;
     }
 
+    /**
+     * Gets the pipeline behaviors.
+     */
     public get pipelineBehaviors(): OrderedPipelineBehaviorsMapping {
         return typeMappings.pipelineBehaviors;
     }
 
+
+    /**
+     * The constructor.
+     * If custom settings are provided, it uses the resolver from those settings; 
+     * otherwise, it defaults to a new InstantiationResolver
+     * @param settings The custom settings
+     */
     public constructor(settings?: Settings) {
         const resolver = settings?.resolver || new InstantiationResolver();
         this._resolver = resolver;
@@ -39,6 +53,12 @@ export default class Mediator {
         this.registerTypesInResolver(resolver);
     }
 
+    /**
+     * This method registers types with a resolver.
+     * If custom settings are provided, it uses the resolver from those settings; 
+     * otherwise, it defaults to a new InstantiationResolver where add method is not used
+     * @param resolver The custom resolver
+     */
     private registerTypesInResolver(resolver: Resolver) {
         for (const mapping of typeMappings.notifications.getAll()) {
             resolver.add(mapping.handlerClass);

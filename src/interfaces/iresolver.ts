@@ -1,3 +1,9 @@
+/**
+ * The resolver interface.
+ * 
+ * @exports
+ * @interface Resolver
+ */
 export default interface Resolver {
     /**
      * Retrieve an instance of a particular class. Used for instantiating things like request handlers, pipeline behaviors and notification handlers.

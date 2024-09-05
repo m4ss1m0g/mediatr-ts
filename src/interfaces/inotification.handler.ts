@@ -1,5 +1,8 @@
 /**
  * The notification handler class
+ * 
+ * @exports
+ * @interface NotificationHandler
  */
 export default interface NotificationHandler<T> {
     /**

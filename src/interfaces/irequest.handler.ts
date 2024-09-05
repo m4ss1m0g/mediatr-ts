@@ -2,6 +2,9 @@ import type RequestData from "../models/request-data";
 
 /**
  * The Request Handler interface
+ * 
+ * @exports 
+ * @interface RequestHandler
  */
 export default interface RequestHandler<TInput extends RequestData<TOutput>, TOutput> {
     /**

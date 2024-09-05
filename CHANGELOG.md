@@ -5,6 +5,22 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.0.0] - 2024-09-05
+
+### Added
+
+- Added mappings class to map on creation handlerclasses and behaviours
+
+### Modified
+
+- Changed interfaces to classes
+- Modified name of object to better match TS conventions
+- Resolver is now passed as mediator ctor parameter
+
+### Deleted
+
+- Removed settings and examples
+
 ## [1.2.1] - 2023-08-09
 
 ### Added
