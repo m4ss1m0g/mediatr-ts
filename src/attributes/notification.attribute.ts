@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/ban-types */
-import type { INotificationClass } from "@/interfaces/inotification.js";
-import type { INotificationHandlerClass } from "@/interfaces/inotification.handler.js";
-import {mediatorSettings} from "@/index.js";
+import type { NotificationClass } from "@/models/notification.js";
+import type { NotificationHandlerClass } from "@/interfaces/inotification.handler.js";
+import { typeMappings } from "@/models/mappings/index.js";
 
 /**
  * Decorate the notificationHandler with this attribute
@@ -9,11 +9,11 @@ import {mediatorSettings} from "@/index.js";
  * @param value The request type
  * @param order The order of event
  */
-const notificationHandler = (value: INotificationClass) => {
+const notificationHandler = (value: NotificationClass) => {
     return (target: Function): void => {
-        mediatorSettings.dispatcher.notifications.add({
-            notification: value,
-            handler: target as INotificationHandlerClass<unknown>
+        typeMappings.notifications.add({
+            notificationClass: value,
+            handlerClass: target as NotificationHandlerClass<unknown>
         });
     };
 };

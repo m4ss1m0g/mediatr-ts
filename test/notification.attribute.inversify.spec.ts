@@ -4,18 +4,19 @@
 import "reflect-metadata";
 import {
     Mediator,
-    IResolver,
-    mediatorSettings,
-    INotification,
+    NotificationHandler,
     notificationHandler,
-    INotificationHandler,
 } from "@/index.js";
 import { injectable, Container, inject } from "inversify";
+import Resolver, { Class } from "@/interfaces/iresolver";
+import NotificationData from "@/models/notification.js";
+import { typeMappings } from "@/models/mappings/index.js";
 
 describe("Notification with inversify", () => {
     beforeEach(() => {
-        mediatorSettings.resolver.clear();
-        mediatorSettings.dispatcher.notifications.clear();
+        typeMappings.pipelineBehaviors.clear();
+        typeMappings.notifications.clear();
+        typeMappings.requestHandlers.clear();
     });
 
     test("Should resolve the notification and inject inversify interfaces", async () => {
@@ -36,39 +37,31 @@ describe("Notification with inversify", () => {
             }
         }
 
-        const c = new Container();
-        c.bind<IWarrior>(TYPES.IWarrior).to(Ninja);
+        const container = new Container();
+        container.bind<IWarrior>(TYPES.IWarrior).to(Ninja);
 
-        class Ping implements INotification {
+        class Ping extends NotificationData {
             public thenumber: number;
 
             constructor(thenumber: number) {
+                super();
                 this.thenumber = thenumber;
             }
         }
 
-        class InversifyResolver implements IResolver {
-            remove(name: string): void {
-                c.unbind(name);
+        class InversifyResolver implements Resolver {
+            resolve<T>(type: Class<T>): T {
+                return container.get(type);
             }
-            clear(): void {
-                c.unbindAll();
-            }
-            resolve<T>(name: string): T {
-                const fx: any = c.get(name);
-                return fx;
-            }
-            add(name: string, instance: Function): void {
-                c.bind(name).to(instance as any);
+    
+            add<T>(type: Class<T>): void {
+                container.bind(type).toSelf();
             }
         }
 
-        // Settings the resolver with Inversify
-        mediatorSettings.resolver = new InversifyResolver();
-
         @notificationHandler(Ping)
         @injectable()
-        class Foo implements INotificationHandler<Ping> {
+        class Foo implements NotificationHandler<Ping> {
             @inject(TYPES.IWarrior)
             public warrior?: IWarrior;
 
@@ -77,7 +70,9 @@ describe("Notification with inversify", () => {
             }
         }
 
-        const mediator = new Mediator();
+        const mediator = new Mediator({
+            resolver: new InversifyResolver(),
+        });
         await mediator.publish(new Ping(99));
 
         expect(result).toBe("We has 99 ninja fight");

@@ -1,12 +1,20 @@
 /* eslint-disable @typescript-eslint/ban-types */
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import "reflect-metadata";
-import { Mediator, IRequestHandler, IResolver, mediatorSettings, IRequest, requestHandler } from "@/index.js";
+import {
+    Mediator,
+    RequestHandler,
+    requestHandler,
+} from "@/index.js";
 import { injectable, Container, inject } from "inversify";
+import Resolver, { Class } from "@/interfaces/iresolver"
+import RequestData from "@/models/request-data.js";
+import { typeMappings } from "@/models/mappings/index.js";
 
 describe("Resolver with inversify", () => {
     beforeEach(()=>{
-        mediatorSettings.resolver.clear();
+        typeMappings.pipelineBehaviors.clear();
+        typeMappings.notifications.clear();
+        typeMappings.requestHandlers.clear();
     });
 
     test("Should resolve own instances", () => {
@@ -52,43 +60,34 @@ describe("Resolver with inversify", () => {
             }
         }
 
-        const c = new Container();
-        c.bind<IWarrior>(TYPES.IWarrior).to(Ninja);
+        const container = new Container();
+        container.bind<IWarrior>(TYPES.IWarrior).to(Ninja);
 
-        class InversifyResolver implements IResolver {
-            remove(name: string): void {
-                c.unbind(name);
+        class InversifyResolver implements Resolver {
+            resolve<T>(type: Class<T>): T {
+                return container.get(type);
             }
-            clear(): void {
-                c.unbindAll();
-            }
-            resolve<T>(name: string): T {
-                return c.get(name);
-            }
-            add(name: string, instance: Function): void {
-                c.bind(name).to(instance as any);
+    
+            add<T>(type: Class<T>): void {
+                container.bind(type).toSelf();
             }
         }
 
         /**
          *  Act
          */
-
-        // Settings the resolver with Inversify
-        mediatorSettings.resolver = new InversifyResolver();
-
-        class Request implements IRequest<number> {
-            public thenumber: number;
-
-            constructor(thenumber: number) {
-                this.thenumber = thenumber;
+        class Request extends RequestData<string> {
+            constructor(
+                public readonly thenumber: number
+            ) {
+                super();
             }
         }
 
         @requestHandler(Request)
         @injectable()
         // eslint-disable-next-line @typescript-eslint/no-unused-vars
-        class HandlerRequest implements IRequestHandler<Request, string> {
+        class HandlerRequest implements RequestHandler<Request, string> {
             @inject(TYPES.IWarrior)
             public warrior?: IWarrior;
 
@@ -97,7 +96,9 @@ describe("Resolver with inversify", () => {
             }
         }
 
-        const mediator = new Mediator();
+        const mediator = new Mediator({
+            resolver: new InversifyResolver()
+        });
         const result = await mediator.send<string>(new Request(99));
 
         expect(result).toBe("We has 99 ninja fight");

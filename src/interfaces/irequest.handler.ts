@@ -1,18 +1,17 @@
+import type RequestData from "../models/request-data";
+
 /**
  * The Request Handler interface
- *
- * @export
- * @interface IRequestHandler
- * @template Input The input type
- * @template Output The output type
  */
-export default interface IRequestHandler<Input, Output> {
+export default interface RequestHandler<TInput extends RequestData<TOutput>, TOutput> {
     /**
      * Handle the request
      *
-     * @param {Input} value The request value
-     * @returns {Promise<Output>}
+     * @param {TInput} value The request value
+     * @returns {Promise<TOutput>}
      * @memberof IRequestHandler
      */
-    handle(value: Input): Promise<Output>;
+    handle(value: TInput): Promise<TOutput>;
 }
+
+export type RequestHandlerClass<TInput extends RequestData<TOutput>, TOutput> = new (...args: unknown[]) => RequestHandler<TInput, TOutput>;

@@ -1,40 +1,39 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
+import "reflect-metadata";
 import {
-    type IPipelineBehavior,
     Mediator,
-    IRequestHandler,
-    mediatorSettings,
-    requestHandler,
-    IRequest,
     pipelineBehavior,
+    PipelineBehavior,
+    RequestHandler,
+    requestHandler,
 } from "@/index.js";
-import Resolver from "@/models/resolver.js";
+import RequestData from "@/models/request-data.js";
+import { typeMappings } from "@/models/mappings/index.js";
 
 describe("Resolver with local container", () => {
     beforeEach(() => {
-        mediatorSettings.resolver.clear();
-        mediatorSettings.dispatcher.behaviors.clear();
+        typeMappings.pipelineBehaviors.clear();
+        typeMappings.notifications.clear();
+        typeMappings.requestHandlers.clear();
     });
 
-    test("Should resolve existing instance", async () => {
+    test("Should resolve existing instance with one behavior", async () => {
         // Arrange
-        mediatorSettings.resolver = new Resolver();
 
-        class Request {
+        class Request extends RequestData<string> {
             name?: string;
         }
 
         @requestHandler(Request)
         // eslint-disable-next-line @typescript-eslint/no-unused-vars
-        class HandlerTest implements IRequestHandler<Request, string> {
+        class HandlerTest implements RequestHandler<Request, string> {
             handle(value: Request): Promise<string> {
                 return Promise.resolve(`Value passed ${value.name}`);
             }
         }
 
         @pipelineBehavior()
-        class PipelineBehaviorTest implements IPipelineBehavior {
-            async handle(request: IRequest<unknown>, next: () => unknown): Promise<unknown> {
+        class PipelineBehaviorTest implements PipelineBehavior {
+            async handle(request: RequestData<unknown>, next: () => unknown): Promise<unknown> {
                 if (request instanceof Request) {
                     request.name += " with stuff";
                 }
@@ -48,36 +47,34 @@ describe("Resolver with local container", () => {
             }
         }
 
-        const r = new Request();
-        r.name = "Foo";
+        const request = new Request();
+        request.name = "Foo";
 
         // Act
         const mediator = new Mediator();
-        const result = await mediator.send(r);
+        const result = await mediator.send(request);
 
         // Assert
         expect(result).toBe("Value passed Foo with stuff after");
     });
 
-    test("Should resolve existing instance", async () => {
+    test("Should resolve existing instance with two behaviors", async () => {
         // Arrange
-        mediatorSettings.resolver = new Resolver();
-
-        class Request {
+        class Request extends RequestData<string> {
             name?: string;
         }
 
         @requestHandler(Request)
         // eslint-disable-next-line @typescript-eslint/no-unused-vars
-        class HandlerTest implements IRequestHandler<Request, string> {
+        class HandlerTest implements RequestHandler<Request, string> {
             handle(value: Request): Promise<string> {
                 return Promise.resolve(`Value passed ${value.name}`);
             }
         }
 
         @pipelineBehavior()
-        class PipelineBehaviorTest1 implements IPipelineBehavior {
-            async handle(request: IRequest<unknown>, next: () => unknown): Promise<unknown> {
+        class PipelineBehaviorTest1 implements PipelineBehavior {
+            async handle(request: RequestData<unknown>, next: () => unknown): Promise<unknown> {
                 if (request instanceof Request) {
                     request.name += " with stuff 1";
                 }
@@ -92,8 +89,8 @@ describe("Resolver with local container", () => {
         }
 
         @pipelineBehavior()
-        class PipelineBehaviorTest2 implements IPipelineBehavior {
-            async handle(request: IRequest<unknown>, next: () => unknown): Promise<unknown> {
+        class PipelineBehaviorTest2 implements PipelineBehavior {
+            async handle(request: RequestData<unknown>, next: () => unknown): Promise<unknown> {
                 if (request instanceof Request) {
                     request.name += " with stuff 2";
                 }
@@ -107,12 +104,12 @@ describe("Resolver with local container", () => {
             }
         }
 
-        const r = new Request();
-        r.name = "Foo";
+        const request = new Request();
+        request.name = "Foo";
 
         // Act
         const mediator = new Mediator();
-        const result = await mediator.send(r);
+        const result = await mediator.send(request);
 
         // Assert
         expect(result).toBe("Value passed Foo with stuff 2 with stuff 1 after 1 after 2");
