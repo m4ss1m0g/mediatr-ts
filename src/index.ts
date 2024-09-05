@@ -15,10 +15,10 @@ import pipelineBehavior from "@/attributes/pipeline.behavior.attribute.js";
 import Mediator from "./models/mediator";
 
 export {
-    RequestData as RequestBase,
+    RequestData,
     RequestHandler,
     requestHandler,
-    NotificationData as NotificationBase,
+    NotificationData,
     notificationHandler,
     NotificationHandler,
     Resolver,
