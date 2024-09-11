@@ -1,4 +1,4 @@
-import type RequestData from "@/models/request.data.js";
+import type RequestData from "@/models/requestData.js";
 
 /**
  *  The pipeline behavior interface.

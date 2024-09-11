@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/ban-types */
 import "reflect-metadata";
 import { Container, inject, injectable } from "inversify";
-import RequestData from "@/models/request.data.js";
+import RequestData from "@/models/requestData.js";
 import { Mediator, RequestHandler, requestHandler, Resolver } from "@/index.js";
 import { Class } from "@/interfaces/resolver";
 import { typeMappings } from "@/models/mappings/index.js";

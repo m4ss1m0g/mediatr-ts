@@ -1,13 +1,13 @@
 /* eslint-disable @typescript-eslint/ban-types */
-import type Notification from "@/models/notification.js";
-import type { NotificationClass } from "@/models/notification.js";
-import type NotificationHandler from "@/interfaces/notification.handler.js";
-import type RequestData from "@/models/request.data.js";
-import type PipelineBehavior from "@/interfaces/pipeline.behavior.js";
+import type Notification from "@/models/notificationData.js";
+import type { NotificationClass } from "@/models/notificationData.js";
+import type NotificationHandler from "@/interfaces/notificationHandler.js";
+import type RequestData from "@/models/requestData.js";
+import type PipelineBehavior from "@/interfaces/pipelineBehavior.js";
 import Resolver, { Class } from "@/interfaces/resolver";
-import RequestHandler from "@/interfaces/request.handler";
+import RequestHandler from "@/interfaces/requestHandler";
 import { typeMappings } from "@/models/mappings/index.js";
-import { InstantiationResolver } from "./istantation-resolver";
+import { InstantiationResolver } from "./instantiationResolver";
 
 type Settings = {
     resolver: Resolver;
@@ -128,7 +128,7 @@ export default class Mediator {
         const next = async () => {
             const areMoreBehaviorsNeedingProcessing = currentBehaviorIndex < behaviors.length;
             if (areMoreBehaviorsNeedingProcessing) {
-                return await execBehavior(request, next); // Process behavior
+                return await execBehavior(request, next); // Process the behavior
             } else {
                 return await func(); // Process the handler
             }

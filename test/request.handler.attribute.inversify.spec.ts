@@ -7,7 +7,7 @@ import {
 } from "@/index.js";
 import { injectable, Container, inject } from "inversify";
 import Resolver, { Class } from "@/interfaces/resolver"
-import RequestData from "@/models/request.data.js";
+import RequestData from "@/models/requestData.js";
 import { typeMappings } from "@/models/mappings/index.js";
 
 describe("Resolver with inversify", () => {

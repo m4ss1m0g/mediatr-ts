@@ -1,10 +1,9 @@
 const marker = Symbol();
 
 /**
- *  The request interface
+ *  The request
  *
  * @export
- * @interface RequestData
  * @template T
  */
 // eslint-disable-next-line @typescript-eslint/no-empty-interface,  @typescript-eslint/no-unused-vars

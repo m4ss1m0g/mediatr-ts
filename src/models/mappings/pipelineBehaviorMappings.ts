@@ -1,5 +1,5 @@
-import { PipelineBehaviorClass } from "@/interfaces/pipeline.behavior";
-import { OrderedMappings, OrderedMapping, byOrder } from "./ordered.mappings";
+import { PipelineBehaviorClass } from "@/interfaces/pipelineBehavior";
+import { OrderedMappings, OrderedMapping, byOrder } from "./orderedMappings";
 
 type PipelineBehaviorData = {
     behaviorClass: PipelineBehaviorClass

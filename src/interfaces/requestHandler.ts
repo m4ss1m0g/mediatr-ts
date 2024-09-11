@@ -1,4 +1,4 @@
-import type RequestData from "../models/request.data";
+import type RequestData from "../models/requestData";
 
 /**
  * The Request Handler interface

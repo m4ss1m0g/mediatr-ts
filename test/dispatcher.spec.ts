@@ -1,8 +1,8 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import NotificationHandler, { NotificationHandlerClass } from "@/interfaces/notification.handler";
-import PipelineBehavior, { PipelineBehaviorClass } from "@/interfaces/pipeline.behavior";
-import RequestData from "@/models/request.data.js";
-import NotificationData from "@/models/notification.js";
+import NotificationHandler, { NotificationHandlerClass } from "@/interfaces/notificationHandler";
+import PipelineBehavior, { PipelineBehaviorClass } from "@/interfaces/pipelineBehavior";
+import RequestData from "@/models/requestData.js";
+import NotificationData from "@/models/notificationData.js";
 import { typeMappings } from "@/models/mappings/index.js";
 
 describe("The internal dispatcher", () => {

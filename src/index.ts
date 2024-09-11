@@ -1,16 +1,16 @@
-import RequestData from "@/models/request.data.js";
-import type RequestHandler from "@/interfaces/request.handler.js";
-import requestHandler from "@/attributes/request.attribute.js";
+import RequestData from "@/models/requestData.js";
+import type RequestHandler from "@/interfaces/requestHandler.js";
+import requestHandler from "@/attributes/requestHandler.attribute.js";
 
-import NotificationData from "@/models/notification.js";
-import type NotificationHandler from "@/interfaces/notification.handler.js";
-import notificationHandler from "@/attributes/notification.attribute.js";
+import NotificationData from "@/models/notificationData.js";
+import type NotificationHandler from "@/interfaces/notificationHandler.js";
+import notificationHandler from "@/attributes/notificationHandler.attribute.js";
 
 import type Resolver from "@/interfaces/resolver.js";
 import type { Class } from "@/interfaces/resolver.js";
 
-import type PipelineBehavior from "@/interfaces/pipeline.behavior.js";
-import pipelineBehavior from "@/attributes/pipeline.behavior.attribute.js";
+import type PipelineBehavior from "@/interfaces/pipelineBehavior.js";
+import pipelineBehavior from "@/attributes/pipelineBehavior.attribute.js";
 
 import Mediator from "./models/mediator";
 

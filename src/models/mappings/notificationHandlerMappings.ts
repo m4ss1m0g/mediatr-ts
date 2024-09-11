@@ -1,6 +1,6 @@
-import { NotificationHandlerClass } from "@/interfaces/notification.handler";
-import { NotificationClass } from "../notification";
-import { byOrder, OrderedMapping, OrderedMappings } from "./ordered.mappings";
+import { NotificationHandlerClass } from "@/interfaces/notificationHandler";
+import { NotificationClass } from "../notificationData";
+import { byOrder, OrderedMapping, OrderedMappings } from "./orderedMappings";
 
 type NotificationHandlerMappingData = { 
     handlerClass: NotificationHandlerClass<unknown>,

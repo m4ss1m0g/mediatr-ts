@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/ban-types */
 
-import type { PipelineBehaviorClass } from "@/interfaces/pipeline.behavior.js";
+import type { PipelineBehaviorClass } from "@/interfaces/pipelineBehavior.js";
 import { typeMappings } from "@/models/mappings/index.js";
 
 /**

@@ -9,7 +9,7 @@ import {
 } from "@/index.js";
 import { injectable, Container, inject } from "inversify";
 import Resolver, { Class } from "@/interfaces/resolver";
-import NotificationData from "@/models/notification.js";
+import NotificationData from "@/models/notificationData.js";
 import { typeMappings } from "@/models/mappings/index.js";
 
 describe("Notification with inversify", () => {
