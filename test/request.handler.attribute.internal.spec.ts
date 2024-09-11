@@ -1,9 +1,5 @@
 import "reflect-metadata";
-import {
-    Mediator,
-    RequestHandler,
-    requestHandler,
-} from "@/index.js";
+import { Mediator, RequestHandler, requestHandler } from "@/index.js";
 import RequestData from "@/models/requestData.js";
 import { typeMappings } from "@/models/mappings/index.js";
 

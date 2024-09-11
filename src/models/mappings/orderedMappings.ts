@@ -32,6 +32,14 @@ export abstract class OrderedMappings<TData = object> {
     public clear(): void {
         this._mappings = [];
     }
+
+    /**
+     * The mappings length
+     * @returns The length
+     */
+    public get length(): number {
+        return this._mappings.length;
+    }
 }
 
 /**

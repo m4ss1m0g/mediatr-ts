@@ -149,10 +149,7 @@ export default class Mediator {
         const handlerClasses = typeMappings.requestHandlers.getAll(
             request.constructor as Class<RequestData<TResult>>
         );
-        if (handlerClasses.length === 0) {
-            throw new Error(`No handler found for request ${request.constructor.name}`);
-        }
-
+        
         const handler = this._resolver.resolve(
             handlerClasses[0].handlerClass as unknown as Class<
                 RequestHandler<RequestData<TResult>, TResult>

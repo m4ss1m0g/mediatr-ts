@@ -8,6 +8,7 @@ import {
 } from "@/index.js";
 import RequestData from "@/models/requestData.js";
 import { typeMappings } from "@/models/mappings/index.js";
+import { OrderedMappings } from "@/models/mappings/orderedMappings";
 
 describe("Resolver with local container", () => {
     beforeEach(() => {
@@ -56,6 +57,8 @@ describe("Resolver with local container", () => {
         const result = await mediator.send(request);
 
         // Assert
+        const behaviour = mediator.pipelineBehaviors as unknown as OrderedMappings
+        expect(behaviour.length).toBe(1);
         expect(result).toBe("Value passed Foo with stuff after");
     });
 
