@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import type Notification from "@/models/notification.js";
 import notificationHandler from "@/attributes/notification.attribute.js";
-import type NotificationHandler from "@/interfaces/inotification.handler.js";
+import type NotificationHandler from "@/interfaces/notification.handler.js";
 import { Mediator } from "@/index.js";
 import { typeMappings } from "@/models/mappings/index.js";
 

@@ -1,7 +1,10 @@
-import type RequestData from "@/models/request-data.js";
+import type RequestData from "@/models/request.data.js";
 
 /**
  *  The pipeline behavior interface.
+ * 
+ * @param request The request to execute
+ * @param next The next pipeline behavior
  *
  * @export
  * @interface PipelineBehavior

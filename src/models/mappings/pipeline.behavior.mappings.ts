@@ -1,4 +1,4 @@
-import { PipelineBehaviorClass } from "@/interfaces/ipipeline.behavior";
+import { PipelineBehaviorClass } from "@/interfaces/pipeline.behavior";
 import { OrderedMappings, OrderedMapping, byOrder } from "./ordered.mappings";
 
 type PipelineBehaviorData = {
@@ -16,6 +16,9 @@ export class PipelineBehaviorMappings extends OrderedMappings<PipelineBehaviorDa
     /**
      * This method takes an array of PipelineBehaviorClass objects and sets the order of each item in the _internal_ collection 
      * based on index in the array passed in.
+     * 
+     * It takes a behaviour class as input and updates the order of each item in the the array based on its index. 
+     * If not found it place the order as -1.
      * 
      * @param behaviorClasses The ordered list of pipeline behavior classes
      */

@@ -1,4 +1,4 @@
-import Resolver, { Class } from "@/interfaces/iresolver";
+import Resolver, { Class } from "@/interfaces/resolver";
 
 /**
  * The default resolver.

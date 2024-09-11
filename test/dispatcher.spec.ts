@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import NotificationHandler, { NotificationHandlerClass } from "@/interfaces/inotification.handler";
-import PipelineBehavior, { PipelineBehaviorClass } from "@/interfaces/ipipeline.behavior";
-import RequestData from "@/models/request-data.js";
+import NotificationHandler, { NotificationHandlerClass } from "@/interfaces/notification.handler";
+import PipelineBehavior, { PipelineBehaviorClass } from "@/interfaces/pipeline.behavior";
+import RequestData from "@/models/request.data.js";
 import NotificationData from "@/models/notification.js";
 import { typeMappings } from "@/models/mappings/index.js";
 

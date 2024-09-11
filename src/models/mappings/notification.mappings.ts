@@ -1,4 +1,4 @@
-import { NotificationHandlerClass } from "@/interfaces/inotification.handler";
+import { NotificationHandlerClass } from "@/interfaces/notification.handler";
 import { NotificationClass } from "../notification";
 import { byOrder, OrderedMapping, OrderedMappings } from "./ordered.mappings";
 
@@ -16,11 +16,11 @@ type NotificationHandlerMappingData = {
 export class NotificationHandlerMappings extends OrderedMappings<NotificationHandlerMappingData> {
 
     /**
-     * This method sets the order of notification handlers for a specific notification class. 
-     * It takes a notification class and an array of handler classes as input, and updates the order of each handler in 
-     * the array based on its index.
-     * In essence, it allows you to specify the order in which notification handlers should be executed for a particular 
+     * It allows you to specify the order in which notification handlers should be executed for a particular 
      * notification class.
+     * 
+     * It takes a notification class and an array of handler classes as input and updates the order of each handler in 
+     * the array based on its index. If not found it place the order as -1.
      *
      * @param notificationClass The notification class for which to set the order.
      * @param handlerClasses The array of handler classes in the order in which they should be executed.

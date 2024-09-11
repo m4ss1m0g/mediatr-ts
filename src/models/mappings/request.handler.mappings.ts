@@ -1,5 +1,5 @@
-import { RequestHandlerClass } from "@/interfaces/irequest.handler";
-import RequestData, { RequestDataClass } from "../request-data";
+import { RequestHandlerClass } from "@/interfaces/request.handler";
+import RequestData, { RequestDataClass } from "../request.data";
 import { byOrder, OrderedMapping, OrderedMappings } from "./ordered.mappings";
 
 type RequestHandlerMappingData = { 

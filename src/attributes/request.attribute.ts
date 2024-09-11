@@ -1,8 +1,8 @@
 /* eslint-disable @typescript-eslint/ban-types */
-import { RequestHandlerClass } from "@/interfaces/irequest.handler";
+import { RequestHandlerClass } from "@/interfaces/request.handler";
 import { typeMappings } from "@/models/mappings/index.js";
-import type { RequestDataClass } from "@/models/request-data.js";
-import RequestData from "@/models/request-data.js";
+import type { RequestDataClass } from "@/models/request.data.js";
+import RequestData from "@/models/request.data.js";
 
 /**
  * Decorate the requestHandler with this attribute

@@ -6,7 +6,7 @@ import {
     RequestHandler,
     requestHandler,
 } from "@/index.js";
-import RequestData from "@/models/request-data.js";
+import RequestData from "@/models/request.data.js";
 import { typeMappings } from "@/models/mappings/index.js";
 
 describe("Resolver with local container", () => {
@@ -32,6 +32,7 @@ describe("Resolver with local container", () => {
         }
 
         @pipelineBehavior()
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
         class PipelineBehaviorTest implements PipelineBehavior {
             async handle(request: RequestData<unknown>, next: () => unknown): Promise<unknown> {
                 if (request instanceof Request) {
@@ -73,6 +74,7 @@ describe("Resolver with local container", () => {
         }
 
         @pipelineBehavior()
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
         class PipelineBehaviorTest1 implements PipelineBehavior {
             async handle(request: RequestData<unknown>, next: () => unknown): Promise<unknown> {
                 if (request instanceof Request) {
@@ -89,6 +91,7 @@ describe("Resolver with local container", () => {
         }
 
         @pipelineBehavior()
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
         class PipelineBehaviorTest2 implements PipelineBehavior {
             async handle(request: RequestData<unknown>, next: () => unknown): Promise<unknown> {
                 if (request instanceof Request) {
