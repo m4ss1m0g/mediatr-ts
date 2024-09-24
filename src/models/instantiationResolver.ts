@@ -1,6 +1,10 @@
-import Resolver, { Class } from "@/interfaces/iresolver";
+import Resolver, { Class } from "@/interfaces/resolver";
 
+/**
+ * The default resolver.
+ */
 export class InstantiationResolver implements Resolver {
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     public add<T>(_type: Class<T>): void {
         // ignored - the instantiation resolver does not need to register anything.
     }

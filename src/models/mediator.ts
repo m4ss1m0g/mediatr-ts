@@ -1,17 +1,17 @@
 /* eslint-disable @typescript-eslint/ban-types */
-import type Notification from "@/models/notification.js";
-import type { NotificationClass } from "@/models/notification.js";
-import type NotificationHandler from "@/interfaces/inotification.handler.js";
-import type RequestData from "@/models/request-data.js";
-import type PipelineBehavior from "@/interfaces/ipipeline.behavior.js";
-import Resolver, { Class } from "@/interfaces/iresolver";
-import RequestHandler from "@/interfaces/irequest.handler";
+import type Notification from "@/models/notificationData.js";
+import type { NotificationClass } from "@/models/notificationData.js";
+import type NotificationHandler from "@/interfaces/notificationHandler.js";
+import type RequestData from "@/models/requestData.js";
+import type PipelineBehavior from "@/interfaces/pipelineBehavior.js";
+import Resolver, { Class } from "@/interfaces/resolver";
+import RequestHandler from "@/interfaces/requestHandler";
 import { typeMappings } from "@/models/mappings/index.js";
-import { InstantiationResolver } from "./resolver";
+import { InstantiationResolver } from "./instantiationResolver";
 
 type Settings = {
     resolver: Resolver;
-}
+};
 
 /**
  * The mediator class.
@@ -22,16 +22,30 @@ type Settings = {
  * @implements {Mediator}
  */
 export default class Mediator {
+    // The resolver
     private readonly _resolver: Resolver;
 
+    /**
+     * Gets the notifications.
+     */
     public get notifications(): OrderedNotificationsMapping {
         return typeMappings.notifications;
     }
 
+    /**
+     * Gets the pipeline behaviors.
+     */
     public get pipelineBehaviors(): OrderedPipelineBehaviorsMapping {
         return typeMappings.pipelineBehaviors;
     }
 
+    /**
+     * The constructor.
+     * If custom settings are provided, it uses the resolver from those settings;
+     * otherwise, it defaults to a new InstantiationResolver
+     *
+     * @param settings The custom settings
+     */
     public constructor(settings?: Settings) {
         const resolver = settings?.resolver || new InstantiationResolver();
         this._resolver = resolver;
@@ -39,6 +53,13 @@ export default class Mediator {
         this.registerTypesInResolver(resolver);
     }
 
+    /**
+     * This method registers types with a resolver.
+     * If custom settings are provided, it uses the resolver from those settings;
+     * otherwise, it defaults to a new InstantiationResolver where add method is not used
+     * 
+     * @param resolver The resolver
+     */
     private registerTypesInResolver(resolver: Resolver) {
         for (const mapping of typeMappings.notifications.getAll()) {
             resolver.add(mapping.handlerClass);
@@ -65,45 +86,75 @@ export default class Mediator {
         const handler = this.getRequiredHandlerForRequest<TResult>(request);
         return this.wrapInPipelineBehaviorChainCalls<TResult>(
             async () => handler.handle(request),
-            request, 
+            request
         );
     }
 
     /**
      * Wraps the given function in a chain of pipeline behavior calls.
-     * On the deepest level, the action is called.
-     * Then the chain of pipeline behaviors is called in reverse order on the result of that.
+     *
+     * @param func The function to wrap
+     * @param request The request to send
+     * @returns The result of the action
+     * @memberof Mediator
+     * @private
+     *
      */
-    private async wrapInPipelineBehaviorChainCalls<TResult>(func: () => Promise<TResult>, request: RequestData<TResult>) {
+    private async wrapInPipelineBehaviorChainCalls<TResult>(
+        func: () => Promise<TResult>,
+        request: RequestData<TResult>
+    ) {
         let currentBehaviorIndex = 0;
         const behaviors = typeMappings.pipelineBehaviors.getAll();
 
-        const getNextBehaviorInChain = () => {
+        /**
+         * Process the behavior in the chain
+         */
+        const execBehavior = async (
+            request: RequestData<TResult>,
+            next: () => Promise<unknown>
+        ) => {
             const behaviorClass = behaviors[currentBehaviorIndex++].behaviorClass;
-            return this._resolver.resolve(behaviorClass as unknown as Class<PipelineBehavior>);
+            const nextBehaviorInChain = this._resolver.resolve(
+                behaviorClass as unknown as Class<PipelineBehavior>
+            );
+            return (await nextBehaviorInChain.handle(request, next)) as Promise<TResult>;
         };
 
+        /**
+         * Recursive function.
+         * Process all behaviors in the pipeline, then the function and then the behavior in the reversed order
+         */
         const next = async () => {
             const areMoreBehaviorsNeedingProcessing = currentBehaviorIndex < behaviors.length;
             if (areMoreBehaviorsNeedingProcessing) {
-                const nextBehaviorInChain = getNextBehaviorInChain();
-                return await nextBehaviorInChain.handle(request, next) as Promise<TResult>;
-            }
-            else {
-                return await func();
+                return await execBehavior(request, next); // Process the behavior
+            } else {
+                return await func(); // Process the handler
             }
         };
 
         return await next();
     }
 
+    /**
+     * Get the handler for the given request
+     *
+     * @param {RequestData<TResult>} request The request
+     * @returns {RequestHandler<RequestData<TResult>, TResult>} The handler
+     * @private
+     * @memberof Mediator
+     */
     private getRequiredHandlerForRequest<TResult>(request: RequestData<TResult>) {
-        const handlerClasses = typeMappings.requestHandlers.getAll(request.constructor as Class<RequestData<TResult>>);
-        if (handlerClasses.length === 0) {
-            throw new Error(`No handler found for request ${request.constructor.name}`);
-        }
-
-        const handler = this._resolver.resolve(handlerClasses[0].handlerClass as unknown as Class<RequestHandler<RequestData<TResult>, TResult>>);
+        const handlerClasses = typeMappings.requestHandlers.getAll(
+            request.constructor as Class<RequestData<TResult>>
+        );
+        
+        const handler = this._resolver.resolve(
+            handlerClasses[0].handlerClass as unknown as Class<
+                RequestHandler<RequestData<TResult>, TResult>
+            >
+        );
         return handler;
     }
 
@@ -117,12 +168,16 @@ export default class Mediator {
     public async publish(message: Notification): Promise<void> {
         const events = typeMappings.notifications.getAll(message.constructor as NotificationClass);
 
-        await Promise.all(events.map(async (p) => {
-            const handler = this._resolver.resolve(p.handlerClass as unknown as Class<NotificationHandler<Notification>>);
-            return handler.handle(message);
-        }));
+        await Promise.all(
+            events.map(async (p) => {
+                const handler = this._resolver.resolve(
+                    p.handlerClass as unknown as Class<NotificationHandler<Notification>>
+                );
+                return handler.handle(message);
+            })
+        );
     }
 }
 
-type OrderedNotificationsMapping = Pick<typeof typeMappings.notifications, 'setOrder'>;
-type OrderedPipelineBehaviorsMapping = Pick<typeof typeMappings.pipelineBehaviors, 'setOrder'>;
+type OrderedNotificationsMapping = Pick<typeof typeMappings.notifications, "setOrder">;
+type OrderedPipelineBehaviorsMapping = Pick<typeof typeMappings.pipelineBehaviors, "setOrder">;

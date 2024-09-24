@@ -1,10 +1,6 @@
 import "reflect-metadata";
-import {
-    Mediator,
-    RequestHandler,
-    requestHandler,
-} from "@/index.js";
-import RequestData from "@/models/request-data.js";
+import { Mediator, RequestHandler, requestHandler } from "@/index.js";
+import RequestData from "@/models/requestData.js";
 import { typeMappings } from "@/models/mappings/index.js";
 
 describe("Resolver with local container", () => {
@@ -91,6 +87,7 @@ describe("Resolver with local container", () => {
     test("Should throw 'cannot find element with key' when instance not found on container", async () => {
         const m = new Mediator();
         const fx = async () => {
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
             await m.send<string>("foo" as any);
         };
 

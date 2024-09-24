@@ -1,9 +1,10 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import type Notification from "@/models/notification.js";
-import notificationHandler from "@/attributes/notification.attribute.js";
-import type NotificationHandler from "@/interfaces/inotification.handler.js";
+import type Notification from "@/models/notificationData.js";
+import notificationHandler from "@/attributes/notificationHandler.attribute.js";
+import type NotificationHandler from "@/interfaces/notificationHandler.js";
 import { Mediator } from "@/index.js";
 import { typeMappings } from "@/models/mappings/index.js";
+import { OrderedMappings } from "@/models/mappings/orderedMappings";
 
 describe("The notification attribute", () => {
     beforeEach(() => {
@@ -52,6 +53,8 @@ describe("The notification attribute", () => {
         mediator.publish(new Ping(message));
 
         // Assert
+        const notifications = mediator.notifications as unknown as OrderedMappings
+        expect(notifications.length).toBe(1);
         expect(result.length).toBe(1);
         expect(result[0]).toBe(message);
     });
