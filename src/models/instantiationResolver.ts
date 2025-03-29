@@ -1,4 +1,4 @@
-import Resolver, { Class } from "@/interfaces/resolver";
+import Resolver, { Class } from "@/interfaces/resolver.js";
 
 /**
  * The default resolver.

@@ -35,7 +35,7 @@ export default {
 
   // A list of reporter names that Jest uses when writing coverage reports
   "coverageReporters": [
-    "json-summary", 
+    "json-summary",
     "text",
     "lcov"
   ],
@@ -81,7 +81,8 @@ export default {
 
   // A map from regular expressions to module names or to arrays of module names that allow to stub out resources with a single module
   moduleNameMapper: {
-    "@/(.*)\\.js$": ["<rootDir>/src/$1"]
+    "^@/(.*)\\.js$": ["<rootDir>/src/$1"],
+    "^(?!.*node_modules)(.*?/.+)\\.js?$": "$1"
   },
 
   // An array of regexp pattern strings, matched against all module paths before considered 'visible' to the module loader

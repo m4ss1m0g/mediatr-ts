@@ -12,7 +12,7 @@ import type { Class } from "@/interfaces/resolver.js";
 import type PipelineBehavior from "@/interfaces/pipelineBehavior.js";
 import pipelineBehavior from "@/attributes/pipelineBehavior.attribute.js";
 
-import Mediator from "./models/mediator";
+import Mediator from "./models/mediator.js";
 
 export {
     RequestData,
