@@ -1,15 +1,15 @@
-import { RequestHandlerClass } from "@/interfaces/requestHandler";
-import RequestData, { RequestDataClass } from "../requestData";
-import { byOrder, OrderedMapping, OrderedMappings } from "./orderedMappings";
+import { RequestHandlerClass } from "@/interfaces/requestHandler.js";
+import RequestData, { RequestDataClass } from "../requestData.js";
+import { byOrder, OrderedMapping, OrderedMappings } from "./orderedMappings.js";
 
-type RequestHandlerMappingData = { 
+type RequestHandlerMappingData = {
     handlerClass: RequestHandlerClass<RequestData<unknown>, unknown>,
     requestClass: RequestDataClass<unknown>
 };
 
 /**
  * Mapping for request handlers
- * 
+ *
  * @exports
  */
 
@@ -17,7 +17,7 @@ export class RequestHandlerMappings extends OrderedMappings<RequestHandlerMappin
 
     /**
      * Gets all mappings for a specific request if provided, otherwise returns all (sorted) mappings
-     * 
+     *
      * @throws Error if no mappings are found for specified argument
      * @param requestClass The request class to get mappings for
      * @returns The array of handler classes in the order in which they should be executed.

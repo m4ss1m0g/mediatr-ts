@@ -4,10 +4,10 @@ import type { NotificationClass } from "@/models/notificationData.js";
 import type NotificationHandler from "@/interfaces/notificationHandler.js";
 import type RequestData from "@/models/requestData.js";
 import type PipelineBehavior from "@/interfaces/pipelineBehavior.js";
-import Resolver, { Class } from "@/interfaces/resolver";
-import RequestHandler from "@/interfaces/requestHandler";
+import Resolver, { Class } from "@/interfaces/resolver.js";
+import RequestHandler from "@/interfaces/requestHandler.js";
 import { typeMappings } from "@/models/mappings/index.js";
-import { InstantiationResolver } from "./instantiationResolver";
+import { InstantiationResolver } from "./instantiationResolver.js";
 
 type Settings = {
     resolver: Resolver;
@@ -57,7 +57,7 @@ export default class Mediator {
      * This method registers types with a resolver.
      * If custom settings are provided, it uses the resolver from those settings;
      * otherwise, it defaults to a new InstantiationResolver where add method is not used
-     * 
+     *
      * @param resolver The resolver
      */
     private registerTypesInResolver(resolver: Resolver) {
@@ -149,7 +149,7 @@ export default class Mediator {
         const handlerClasses = typeMappings.requestHandlers.getAll(
             request.constructor as Class<RequestData<TResult>>
         );
-        
+
         const handler = this._resolver.resolve(
             handlerClasses[0].handlerClass as unknown as Class<
                 RequestHandler<RequestData<TResult>, TResult>

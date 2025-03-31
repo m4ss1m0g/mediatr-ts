@@ -1,9 +1,9 @@
-import type RequestData from "../models/requestData";
+import type RequestData from "../models/requestData.js";
 
 /**
  * The Request Handler interface
- * 
- * @exports 
+ *
+ * @exports
  * @interface RequestHandler
  */
 export default interface RequestHandler<TInput extends RequestData<TOutput>, TOutput> {

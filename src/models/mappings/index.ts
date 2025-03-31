@@ -1,6 +1,6 @@
-import { NotificationHandlerMappings } from "./notificationHandlerMappings";
-import { PipelineBehaviorMappings } from "./pipelineBehaviorMappings";
-import { RequestHandlerMappings } from "./requestHandlerMappings";
+import { NotificationHandlerMappings } from "./notificationHandlerMappings.js";
+import { PipelineBehaviorMappings } from "./pipelineBehaviorMappings.js";
+import { RequestHandlerMappings } from "./requestHandlerMappings.js";
 
 export const typeMappings = {
     pipelineBehaviors: new PipelineBehaviorMappings(),
