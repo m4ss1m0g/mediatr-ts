@@ -1,6 +1,6 @@
 {
     "name": "mediatr-ts",
-    "version": "2.0.2",
+    "version": "2.1.0",
     "type": "module",
     "description": "Mimic the famous MediatR csharp library see: (https://github.com/jbogard/MediatR)",
     "types": "lib/types/index.d.ts",

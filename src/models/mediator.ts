@@ -8,6 +8,7 @@ import Resolver, { Class } from "@/interfaces/resolver.js";
 import RequestHandler from "@/interfaces/requestHandler.js";
 import { typeMappings } from "@/models/mappings/index.js";
 import { InstantiationResolver } from "./instantiationResolver.js";
+import PublishError from "@/errors/publish-error.js";
 
 type Settings = {
     resolver: Resolver;
@@ -168,7 +169,7 @@ export default class Mediator {
     public async publish(message: Notification): Promise<void> {
         const events = typeMappings.notifications.getAll(message.constructor as NotificationClass);
 
-        await Promise.all(
+        const results = await Promise.allSettled(
             events.map(async (p) => {
                 const handler = this._resolver.resolve(
                     p.handlerClass as unknown as Class<NotificationHandler<Notification>>
@@ -176,6 +177,9 @@ export default class Mediator {
                 return handler.handle(message);
             })
         );
+
+        if (results.some((r) => r.status === "rejected"))
+            throw new PublishError("Error publishing notification", results);
     }
 }
 
