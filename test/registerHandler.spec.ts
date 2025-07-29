@@ -106,23 +106,21 @@ describe("manual handler register", () => {
 
 
 
-        test("should throw on registering decorated handler", async () => {
-         
-               // The request object
-               class Request extends RequestData<void> {  }
-           
-               // Decorate the handler request with Handler and injectable attribute, notice the warrior property
-               @injectable()
-               @requestHandler(Request)
-               // eslint-disable-next-line @typescript-eslint/no-unused-vars
-               class HandlerRequest implements RequestHandler<Request, void> {
-                   public async handle(value: Request): Promise<void> { }
-               }
+    test("should throw on registering decorated handler", async () => {
+        
+            // The request object
+            class Request extends RequestData<void> {  }
+            // Decorate the handler request with Handler and injectable attribute, notice the warrior property
+            @injectable()
+            @requestHandler(Request)
+            // eslint-disable-next-line @typescript-eslint/no-unused-vars
+            class HandlerRequest implements RequestHandler<Request, void> {
+                public async handle(value: Request): Promise<void> { }
+            }
+            const mediator = new Mediator();
 
-               const mediator = new Mediator();
-
-               
-               throws(() =>  mediator.registerHandler(Request, HandlerRequest) )
+            throws(() =>  mediator.registerHandler(Request, HandlerRequest) )
             
     })
+
 })

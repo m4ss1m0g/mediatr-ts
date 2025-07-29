@@ -194,24 +194,21 @@ export default class Mediator {
     public registerHandler<TRequest>(request: RequestDataClass<TRequest>, handler :RequestHandlerClass<RequestData<unknown>, unknown>) {
 
         const existingTypeMappings = typeMappings.requestHandlers.getAll().filter(x => x.requestClass === request);
-
-
+        
         if(existingTypeMappings.length > 0) {
             throw new Error(`Request handler for ${request.name} has been defined twice. `);
         }
          // check if handler in resolver
         try {   this._resolver.resolve(handler) } catch (error) {
-
             // adds handler to resolver, since it wont added in constructing phase
             this._resolver.add(handler as RequestHandlerClass<RequestData<unknown>, unknown>)
           
         } 
-
         typeMappings.requestHandlers.add({
             requestClass: request,
             handlerClass: handler as RequestHandlerClass<RequestData<unknown>, unknown>
         });
-}
+    }
 }
 
 type OrderedNotificationsMapping = Pick<typeof typeMappings.notifications, "setOrder">;

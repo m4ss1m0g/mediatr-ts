@@ -46,6 +46,30 @@ const result = await mediator.send(r);
 // result = "Value passed Foo"
 ```
 
+### Manual handler registration
+
+If you prefer not to use `requestHandler` decorator, you can register handlers programmatically:
+
+```typescript
+// Set up a resolver (e.g., InversifyResolver)
+const mediator = new Mediator({ resolver: myResolver });
+
+class Request extends RequestData<string> {
+    name: string;
+}
+
+class HandlerTest implements RequestHandler<Request, string> {
+    handle(value: Request): Promise<string> {
+        return Promise.resolve(`Value passed ${value.name}`);
+    }
+}
+
+// Register manually
+mediator.registerHandler(Request, HandlerTest);
+
+await mediator.send(new Request(...));
+
+```
 ### Notification handlers
 
 ```typescript
