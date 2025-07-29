@@ -5,10 +5,11 @@ import type NotificationHandler from "@/interfaces/notificationHandler.js";
 import type RequestData from "@/models/requestData.js";
 import type PipelineBehavior from "@/interfaces/pipelineBehavior.js";
 import Resolver, { Class } from "@/interfaces/resolver.js";
-import RequestHandler from "@/interfaces/requestHandler.js";
+import RequestHandler, { RequestHandlerClass } from "@/interfaces/requestHandler.js";
 import { typeMappings } from "@/models/mappings/index.js";
 import { InstantiationResolver } from "./instantiationResolver.js";
 import PublishError from "@/errors/publish-error.js";
+import { RequestDataClass } from "@/models/requestData.js";
 
 type Settings = {
     resolver: Resolver;
@@ -181,6 +182,36 @@ export default class Mediator {
         if (results.some((r) => r.status === "rejected"))
             throw new PublishError("Error publishing notification", results);
     }
+
+
+    /**
+     * @description - Manually register a handler without {@requestHandler()} 
+     * @type 
+     * @param {RequestDataClass<TRequest>} request - request class
+     * @param {RequestHandlerClass<RequestData<unknown>, unknown>} handler - request handler class
+     * @memberof Mediator
+     */
+    public registerHandler<TRequest>(request: RequestDataClass<TRequest>, handler :RequestHandlerClass<RequestData<unknown>, unknown>) {
+
+        const existingTypeMappings = typeMappings.requestHandlers.getAll().filter(x => x.requestClass === request);
+
+
+        if(existingTypeMappings.length > 0) {
+            throw new Error(`Request handler for ${request.name} has been defined twice. `);
+        }
+         // check if handler in resolver
+        try {   this._resolver.resolve(handler) } catch (error) {
+
+            // adds handler to resolver, since it wont added in constructing phase
+            this._resolver.add(handler as RequestHandlerClass<RequestData<unknown>, unknown>)
+          
+        } 
+
+        typeMappings.requestHandlers.add({
+            requestClass: request,
+            handlerClass: handler as RequestHandlerClass<RequestData<unknown>, unknown>
+        });
+}
 }
 
 type OrderedNotificationsMapping = Pick<typeof typeMappings.notifications, "setOrder">;
