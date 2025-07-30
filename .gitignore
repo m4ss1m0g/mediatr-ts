@@ -76,9 +76,6 @@ typings/
 # Yarn Integrity file
 .yarn-integrity
 
-
-# bun files
-bun.lock
 # dotenv environment variables file
 .env
 .env.test
