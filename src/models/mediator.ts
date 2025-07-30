@@ -183,30 +183,29 @@ export default class Mediator {
             throw new PublishError("Error publishing notification", results);
     }
 
-
     /**
-     * @description - Manually register a handler without {@requestHandler()} 
-     * @type 
-     * @param {RequestDataClass<TRequest>} request - request class
+     * @description - Manually register a handler without {@requestHandler()}
+     * @type
+     * @param {RequestDataClass<T>} request - request class
      * @param {RequestHandlerClass<RequestData<unknown>, unknown>} handler - request handler class
      * @memberof Mediator
      */
-    public registerHandler<TRequest>(request: RequestDataClass<TRequest>, handler :RequestHandlerClass<RequestData<unknown>, unknown>) {
+    public registerHandler<T>(
+        request: RequestDataClass<T>,
+        handler: RequestHandlerClass<RequestData<unknown>, unknown>
+    ) {
+        typeMappings.requestHandlers.throwIfExistingTypeMappings(request);
 
-        const existingTypeMappings = typeMappings.requestHandlers.getAll().filter(x => x.requestClass === request);
-        
-        if(existingTypeMappings.length > 0) {
-            throw new Error(`Request handler for ${request.name} has been defined twice. `);
-        }
-         // check if handler in resolver
-        try {   this._resolver.resolve(handler) } catch (error) {
+        // check if handler in resolver
+        try {
+            this._resolver.resolve(handler);
+        } catch (error) {
             // adds handler to resolver, since it wont added in constructing phase
-            this._resolver.add(handler as RequestHandlerClass<RequestData<unknown>, unknown>)
-          
-        } 
+            this._resolver.add(handler as RequestHandlerClass<RequestData<unknown>, unknown>);
+        }
         typeMappings.requestHandlers.add({
             requestClass: request,
-            handlerClass: handler as RequestHandlerClass<RequestData<unknown>, unknown>
+            handlerClass: handler as RequestHandlerClass<RequestData<unknown>, unknown>,
         });
     }
 }

@@ -11,10 +11,7 @@ import RequestData from "@/models/requestData.js";
  */
 const requestHandler = <T>(value: RequestDataClass<T>) => {
     return (target: Function): void => {
-        const existingTypeMappings = typeMappings.requestHandlers.getAll().filter(x => x.requestClass === value);
-        if(existingTypeMappings.length > 0) {
-            throw new Error(`Request handler for ${value.name} has been defined twice. Make sure you only have one @requestHandler decorator for each request type.`);
-        }
+        typeMappings.requestHandlers.throwIfExistingTypeMappings(value);
 
         typeMappings.requestHandlers.add({
             requestClass: value,
