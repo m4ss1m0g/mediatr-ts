@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [0.0.0] - unreleased
 
+## [2.2.0] - 2025-08-01
+
+- Added manual handler registration
+
 ## [2.1.0] - 2025-06-12
 
 ### Modified
@@ -126,6 +130,7 @@ This release support **Notifications**.
 
 - Initial release
 
+[2.2.0]: https://github.com/m4ss1m0g/mediatr-ts/compare/tag/v2.1.0...v2.2.0
 [2.1.0]: https://github.com/m4ss1m0g/mediatr-ts/compare/tag/v2.0.0...v2.1.0
 [2.0.0]: https://github.com/m4ss1m0g/mediatr-ts/compare/tag/v1.2.1...v2.0.0
 [1.2.1]: https://github.com/m4ss1m0g/mediatr-ts/compare/tag/v1.2.0...v1.2.1
